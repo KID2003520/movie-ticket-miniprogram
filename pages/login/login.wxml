@@ -1,0 +1,72 @@
+<view class="container">
+  <view class="login-header">
+    <view class="logo">🎬</view>
+    <text class="title">电影购票</text>
+    <text class="desc">{{loginType === 'wechat' ? '登录后享受更多服务' : '手机号登录'}}</text>
+  </view>
+
+  <view class="login-type-tabs">
+    <view class="tab {{loginType === 'wechat' ? 'active' : ''}}" bindtap="switchLoginType" data-type="wechat">
+      <text class="tab-icon">📱</text>
+      <text>微信登录</text>
+    </view>
+    <view class="tab {{loginType === 'phone' ? 'active' : ''}}" bindtap="switchLoginType" data-type="phone">
+      <text class="tab-icon">📞</text>
+      <text>账号登录</text>
+    </view>
+  </view>
+
+  <view class="login-content">
+    <block wx:if="{{loginType === 'wechat'}}">
+      <view class="wechat-login-area">
+        <view class="login-btn primary" bindtap="onGetUserProfile">
+          <text class="btn-icon">�</text>
+          <text>微信一键登录</text>
+        </view>
+        <view class="wechat-tip">
+          <text>点击上方按钮即可一键登录</text>
+          <text class="sub-tip">我们将获取您的昵称和头像用于完善个人资料</text>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="phone-login-area">
+        <view class="form-item">
+          <text class="label">手机号</text>
+          <input class="input {{phoneError ? 'error' : ''}}" type="number" maxlength="11" placeholder="请输入手机号" value="{{phone}}" bindinput="onPhoneInput" />
+          <text class="error-tip" wx:if="{{phoneError}}">{{phoneError}}</text>
+        </view>
+        <view class="form-item">
+          <text class="label">密码</text>
+          <input class="input {{passwordError ? 'error' : ''}}" type="password" placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" />
+          <text class="error-tip" wx:if="{{passwordError}}">{{passwordError}}</text>
+        </view>
+
+        <view class="login-btn primary" bindtap="onPasswordLogin">
+          <text>登录</text>
+        </view>
+
+        <view class="forgot-password">
+          <text>忘记密码？</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="divider" wx:if="{{loginType === 'wechat'}}">
+      <text>其他登录方式</text>
+    </view>
+
+    <view class="login-btn default" bindtap="onPhoneLogin" wx:if="{{loginType === 'wechat'}}">
+      <text class="btn-icon">📞</text>
+      <text>手机号登录</text>
+    </view>
+  </view>
+
+  <view class="login-footer">
+    <text class="agreement">登录即表示同意</text>
+    <text class="link">《用户协议》</text>
+    <text class="agreement">和</text>
+    <text class="link">《隐私政策》</text>
+  </view>
+</view>

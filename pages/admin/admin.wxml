@@ -1,0 +1,93 @@
+<view class="container">
+  <view class="admin-header">
+    <view class="admin-info">
+      <image src="{{adminInfo.avatarUrl || 'https://picsum.photos/100/100?random=888'}}" class="avatar"></image>
+      <view class="info">
+        <text class="name">{{adminInfo.nickName || '管理员'}}</text>
+        <text class="role">超级管理员</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="stats-section">
+    <view class="stats-title">今日数据</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{stats.todayOrders}}</text>
+        <text class="stat-label">今日订单</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.todayRevenue}}</text>
+        <text class="stat-label">今日收入(元)</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.newUsers}}</text>
+        <text class="stat-label">新增用户</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.activeMovies}}</text>
+        <text class="stat-label">上映电影</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="menu-section">
+    <view class="section-title">功能管理</view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="onMovieManage">
+        <view class="menu-icon movie">🎬</view>
+        <view class="menu-content">
+          <text class="menu-title">电影管理</text>
+          <text class="menu-desc">添加、编辑、上下架电影</text>
+        </view>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="onUserManage">
+        <view class="menu-icon user">👥</view>
+        <view class="menu-content">
+          <text class="menu-title">用户管理</text>
+          <text class="menu-desc">用户账号、权限管理</text>
+        </view>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="onOrderManage">
+        <view class="menu-icon order">📋</view>
+        <view class="menu-content">
+          <text class="menu-title">订单管理</text>
+          <text class="menu-desc">查看、处理用户订单</text>
+        </view>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="onCinemaManage">
+        <view class="menu-icon cinema">🏛️</view>
+        <view class="menu-content">
+          <text class="menu-title">影院管理</text>
+          <text class="menu-desc">影院信息、排片管理</text>
+        </view>
+        <text class="arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <view class="quick-section">
+    <view class="section-title">快捷操作</view>
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="onAddMovie">
+        <text class="quick-icon">➕</text>
+        <text class="quick-text">添加电影</text>
+      </view>
+      <view class="quick-item" bindtap="onAddUser">
+        <text class="quick-icon">👤</text>
+        <text class="quick-text">添加用户</text>
+      </view>
+      <view class="quick-item" bindtap="onViewReport">
+        <text class="quick-icon">📊</text>
+        <text class="quick-text">数据报表</text>
+      </view>
+      <view class="quick-item" bindtap="onSettings">
+        <text class="quick-icon">⚙️</text>
+        <text class="quick-text">系统设置</text>
+      </view>
+    </view>
+  </view>
+</view>

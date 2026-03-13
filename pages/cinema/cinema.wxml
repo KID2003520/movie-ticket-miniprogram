@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="cinema-list">
+    <view class="cinema-item" wx:for="{{cinemas}}" wx:key="_id" bindtap="onCinemaTap" data-id="{{item._id}}">
+      <view class="cinema-info">
+        <text class="cinema-name">{{item.name}}</text>
+        <text class="cinema-address">{{item.address}}</text>
+        <view class="cinema-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag">{{tag}}</text>
+        </view>
+      </view>
+      <view class="cinema-right">
+        <text class="cinema-price">{{item.minPrice}}元起</text>
+        <text class="cinema-distance">{{item.distance}}km</text>
+        <view class="location-btn" catchtap="onLocationTap" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}" data-name="{{item.name}}" data-address="{{item.address}}">
+          <text class="location-text">导航</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

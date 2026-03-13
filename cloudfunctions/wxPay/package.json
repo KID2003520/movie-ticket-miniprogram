@@ -1,0 +1,9 @@
+{
+  "name": "wxPay",
+  "version": "1.0.0",
+  "description": "微信支付",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

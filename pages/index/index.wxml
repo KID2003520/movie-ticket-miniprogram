@@ -1,0 +1,83 @@
+<view class="container">
+  <view class="header">
+    <view class="location">
+      <text class="location-icon">📍</text>
+      <text class="location-text">北京</text>
+    </view>
+    <view class="search-bar" bindtap="onSearchTap">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索电影、影院</text>
+    </view>
+  </view>
+
+  <swiper class="banner" indicator-dots autoplay circular interval="3000" duration="500">
+    <swiper-item wx:for="{{bannerList}}" wx:key="id" bindtap="onBannerTap" data-id="{{item.id}}">
+      <image src="{{item.image}}" mode="aspectFill" class="banner-image"></image>
+    </swiper-item>
+  </swiper>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🔥 热门电影</text>
+      <text class="section-more" bindtap="onMoreTap">更多 ></text>
+    </view>
+    <scroll-view scroll-x class="movie-scroll">
+      <view class="movie-list">
+        <view class="movie-item" wx:for="{{hotMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+          <image src="{{item.poster}}" mode="aspectFill" class="movie-poster"></image>
+          <view class="movie-info">
+            <text class="movie-title">{{item.title}}</text>
+            <view class="movie-rating">
+              <text class="rating-value">{{item.rating}}</text>
+              <text class="rating-label">分</text>
+            </view>
+            <text class="movie-price">{{item.price}}元起</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🎬 正在热映</text>
+      <text class="section-more" bindtap="onMoreTap">更多 ></text>
+    </view>
+    <view class="movie-grid">
+      <view class="movie-card" wx:for="{{showingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+        <image src="{{item.poster}}" mode="aspectFill" class="card-poster"></image>
+        <view class="card-info">
+          <text class="card-title">{{item.title}}</text>
+          <view class="card-meta">
+            <text class="card-rating">{{item.rating}}分</text>
+            <text class="card-genre">{{item.genre}}</text>
+          </view>
+          <text class="card-price">{{item.price}}元起</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🎯 即将上映</text>
+      <text class="section-more" bindtap="onMoreTap">更多 ></text>
+    </view>
+    <view class="movie-grid">
+      <view class="movie-card" wx:for="{{comingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+        <image src="{{item.poster}}" mode="aspectFill" class="card-poster"></image>
+        <view class="card-info">
+          <text class="card-title">{{item.title}}</text>
+          <view class="card-meta">
+            <text class="card-date">{{item.releaseDate}}</text>
+          </view>
+          <view class="coming-tag">即将上映</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

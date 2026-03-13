@@ -1,0 +1,241 @@
+{
+  "collections": {
+    "users": {
+      "description": "用户表",
+      "fields": {
+        "_id": "用户ID（自动生成）",
+        "_openid": "用户openid（自动）",
+        "nickName": "用户昵称",
+        "avatarUrl": "头像URL",
+        "phone": "手机号",
+        "gender": "性别 0-未知 1-男 2-女",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "openid_index",
+          "keys": ["_openid"],
+          "unique": true
+        },
+        {
+          "name": "phone_index",
+          "keys": ["phone"],
+          "unique": true
+        }
+      ]
+    },
+    "movies": {
+      "description": "电影表",
+      "fields": {
+        "_id": "电影ID",
+        "title": "电影标题",
+        "poster": "海报URL",
+        "rating": "评分",
+        "genre": "类型",
+        "duration": "时长（分钟）",
+        "director": "导演",
+        "actors": "主演",
+        "description": "剧情简介",
+        "releaseDate": "上映日期",
+        "price": "票价（分）",
+        "status": "状态 showing-热映 coming-即将上映",
+        "hot": "热度值",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "status_index",
+          "keys": ["status", "hot"]
+        },
+        {
+          "name": "releaseDate_index",
+          "keys": ["releaseDate"]
+        }
+      ]
+    },
+    "cinemas": {
+      "description": "影院表",
+      "fields": {
+        "_id": "影院ID",
+        "name": "影院名称",
+        "address": "地址",
+        "phone": "联系电话",
+        "latitude": "纬度",
+        "longitude": "经度",
+        "city": "城市",
+        "district": "区域",
+        "tags": "标签数组",
+        "minPrice": "最低票价（分）",
+        "distance": "距离（km）",
+        "facilities": "设施",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "city_index",
+          "keys": ["city", "distance"]
+        },
+        {
+          "name": "location_index",
+          "keys": ["latitude", "longitude"]
+        }
+      ]
+    },
+    "schedules": {
+      "description": "场次表",
+      "fields": {
+        "_id": "场次ID",
+        "movieId": "电影ID",
+        "movieTitle": "电影标题",
+        "moviePoster": "电影海报",
+        "cinemaId": "影院ID",
+        "cinemaName": "影院名称",
+        "hallName": "影厅名称",
+        "hallType": "影厅类型",
+        "date": "日期 YYYY-MM-DD",
+        "startTime": "开始时间 HH:mm",
+        "endTime": "结束时间 HH:mm",
+        "price": "票价（分）",
+        "totalSeats": "总座位数",
+        "availableSeats": "可用座位数",
+        "status": "状态",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "cinema_movie_date",
+          "keys": ["cinemaId", "movieId", "date"]
+        },
+        {
+          "name": "date_startTime",
+          "keys": ["date", "startTime"]
+        }
+      ]
+    },
+    "seats": {
+      "description": "座位表",
+      "fields": {
+        "_id": "座位ID",
+        "scheduleId": "场次ID",
+        "row": "行号",
+        "col": "列号",
+        "status": "状态 available-可选 sold-已售 locked-锁定",
+        "orderId": "订单ID",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "schedule_index",
+          "keys": ["scheduleId", "row", "col"]
+        },
+        {
+          "name": "order_index",
+          "keys": ["orderId"]
+        }
+      ]
+    },
+    "orders": {
+      "description": "订单表",
+      "fields": {
+        "_id": "订单ID",
+        "_openid": "用户openid",
+        "orderNo": "订单编号",
+        "scheduleId": "场次ID",
+        "movieId": "电影ID",
+        "movieTitle": "电影标题",
+        "moviePoster": "电影海报",
+        "cinemaId": "影院ID",
+        "cinemaName": "影院名称",
+        "hallName": "影厅名称",
+        "date": "日期",
+        "startTime": "开始时间",
+        "seats": "座位数组 [{row, col}]",
+        "seatCount": "座位数量",
+        "totalPrice": "总价（分）",
+        "couponId": "优惠券ID",
+        "discount": "优惠金额（分）",
+        "status": "状态 pending-待支付 paid-已支付 used-已使用 cancelled-已取消 refunded-已退款",
+        "payTime": "支付时间",
+        "useTime": "使用时间",
+        "createTime": "创建时间",
+        "updateTime": "更新时间"
+      },
+      "indexes": [
+        {
+          "name": "openid_status",
+          "keys": ["_openid", "status", "createTime"]
+        },
+        {
+          "name": "orderNo_index",
+          "keys": ["orderNo"],
+          "unique": true
+        }
+      ]
+    },
+    "comments": {
+      "description": "评论表",
+      "fields": {
+        "_id": "评论ID",
+        "_openid": "用户openid",
+        "movieId": "电影ID",
+        "nickName": "用户昵称",
+        "avatarUrl": "用户头像",
+        "rating": "评分 1-5",
+        "content": "评论内容",
+        "likes": "点赞数",
+        "createTime": "创建时间"
+      },
+      "indexes": [
+        {
+          "name": "movie_createTime",
+          "keys": ["movieId", "createTime"]
+        }
+      ]
+    },
+    "collections": {
+      "description": "收藏表",
+      "fields": {
+        "_id": "收藏ID",
+        "_openid": "用户openid",
+        "movieId": "电影ID",
+        "movieTitle": "电影标题",
+        "moviePoster": "电影海报",
+        "createTime": "创建时间"
+      },
+      "indexes": [
+        {
+          "name": "openid_movie",
+          "keys": ["_openid", "movieId"],
+          "unique": true
+        }
+      ]
+    },
+    "coupons": {
+      "description": "优惠券表",
+      "fields": {
+        "_id": "优惠券ID",
+        "_openid": "用户openid",
+        "title": "优惠券标题",
+        "type": "类型 discount-折扣 reduce-满减",
+        "value": "优惠值",
+        "minAmount": "最低消费金额（分）",
+        "status": "状态 valid-有效 used-已使用 expired-已过期",
+        "expireTime": "过期时间",
+        "useTime": "使用时间",
+        "orderId": "使用的订单ID",
+        "createTime": "创建时间"
+      },
+      "indexes": [
+        {
+          "name": "openid_status",
+          "keys": ["_openid", "status", "expireTime"]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<view class="container">
+  <view wx:if="{{schedule}}" class="seat-wrapper">
+    <view class="movie-info">
+      <image src="{{schedule.moviePoster}}" mode="aspectFill" class="movie-poster"></image>
+      <view class="movie-detail">
+        <text class="movie-title">{{schedule.movieTitle}}</text>
+        <text class="movie-meta">{{schedule.date}} {{schedule.startTime}}</text>
+        <text class="movie-meta">{{schedule.hallName}}</text>
+      </view>
+    </view>
+
+    <view class="screen-wrapper">
+      <view class="screen">银幕</view>
+      <view class="screen-shadow"></view>
+    </view>
+
+    <view class="seat-container">
+      <view class="seat-row" wx:for="{{seats}}" wx:key="index" wx:for-index="rowIndex">
+        <view class="row-label">{{rowIndex + 1}}</view>
+        <view class="seat-col" wx:for="{{item}}" wx:key="col" bindtap="onSeatTap" data-row="{{item.row}}" data-col="{{item.col}}" data-status="{{item.status}}">
+          <view class="seat {{item.status}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="seat-legend">
+      <view class="legend-item">
+        <view class="legend-seat available"></view>
+        <text>可选</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-seat selected"></view>
+        <text>已选</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-seat sold"></view>
+        <text>已售</text>
+      </view>
+    </view>
+
+    <view class="selected-info">
+      <text class="selected-label">已选座位:</text>
+      <view class="selected-seats">
+        <text class="selected-seat" wx:for="{{selectedSeats}}" wx:key="index">{{item.row}}排{{item.col}}座</text>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <view class="price-info">
+        <text class="price-label">总计</text>
+        <text class="price-value">{{totalPrice}}元</text>
+      </view>
+      <view class="submit-btn {{selectedSeats.length === 0 ? 'disabled' : ''}}" bindtap="onSubmit">确认选座</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

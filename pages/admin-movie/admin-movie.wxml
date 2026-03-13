@@ -1,0 +1,83 @@
+<view class="container">
+  <view class="filter-bar">
+    <view class="filter-row">
+      <picker mode="selector" range="{{genreList}}" range-key="label" bindchange="onGenreChange">
+        <view class="filter-item">
+          <text>{{currentGenreLabel || '电影类型'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <picker mode="selector" range="{{statusList}}" range-key="label" bindchange="onStatusChange">
+        <view class="filter-item">
+          <text>{{currentStatusLabel || '上映状态'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <picker mode="selector" range="{{sortList}}" range-key="label" bindchange="onSortChange">
+        <view class="filter-item">
+          <text>{{currentSortLabel || '排序方式'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索电影名称" value="{{keyword}}" bindinput="onSearchInput" />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+  </view>
+
+  <view class="movie-list">
+    <view class="movie-item" wx:for="{{movies}}" wx:key="_id">
+      <image src="{{item.poster}}" mode="aspectFill" class="movie-poster"></image>
+      <view class="movie-info">
+        <view class="movie-header">
+          <text class="movie-title">{{item.title}}</text>
+          <text class="status-tag {{item.status}}">{{item.status === 'showing' ? '上映中' : item.status === 'coming' ? '即将上映' : '已下架'}}</text>
+        </view>
+        <text class="movie-meta">类型: {{item.genre}}</text>
+        <text class="movie-meta">时长: {{item.duration}}分钟</text>
+        <text class="movie-meta">票价: ¥{{item.price}}起</text>
+        <text class="movie-meta">上映: {{item.releaseDate}}</text>
+        <view class="movie-stats">
+          <text class="stat">票房: {{item.boxOffice || 0}}万</text>
+          <text class="stat">评分: {{item.rating}}</text>
+        </view>
+      </view>
+      <view class="movie-actions">
+        <view class="action-btn edit" bindtap="onEdit" data-id="{{item._id}}">编辑</view>
+        <view class="action-btn {{item.status === 'off' ? 'on' : 'off'}}" bindtap="onToggleStatus" data-id="{{item._id}}" data-status="{{item.status}}">
+          {{item.status === 'off' ? '上架' : '下架'}}
+        </view>
+        <view class="action-btn delete" bindtap="onDelete" data-id="{{item._id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && movies.length === 0}}" class="empty-state">
+    <text class="empty-icon">🎬</text>
+    <text class="empty-text">暂无电影数据</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view class="add-btn" bindtap="onAddMovie">
+    <text>+</text>
+  </view>
+
+  <view wx:if="{{hasMore && movies.length > 0}}" class="load-more" bindtap="onLoadMore">
+    <text>加载更多</text>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showConfirmModal}}" bindtap="onCancelModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-title">{{modalTitle}}</view>
+    <view class="modal-desc">{{modalDesc}}</view>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="onCancelModal">取消</view>
+      <view class="modal-btn confirm" bindtap="onConfirmModal">确定</view>
+    </view>
+  </view>
+</view>

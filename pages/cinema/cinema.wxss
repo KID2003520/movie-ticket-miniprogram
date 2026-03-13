@@ -1,0 +1,90 @@
+.container {
+  padding-bottom: 20rpx;
+}
+
+.cinema-list {
+  padding: 0 20rpx;
+}
+
+.cinema-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.cinema-info {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.cinema-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.cinema-address {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cinema-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.tag {
+  font-size: 22rpx;
+  color: #FF6B6B;
+  border: 1rpx solid #FF6B6B;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+.cinema-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.cinema-price {
+  font-size: 32rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.cinema-distance {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.location-btn {
+  padding: 10rpx 20rpx;
+  background-color: #fff5f5;
+  border-radius: 20rpx;
+}
+
+.location-text {
+  font-size: 24rpx;
+  color: #FF6B6B;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+}

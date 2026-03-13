@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/movie/movie",
+    "pages/movie-detail/movie-detail",
+    "pages/cinema/cinema",
+    "pages/cinema-detail/cinema-detail",
+    "pages/seat-selection/seat-selection",
+    "pages/order/order",
+    "pages/order-detail/order-detail",
+    "pages/user/user",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/search/search",
+    "pages/admin/admin",
+    "pages/admin-movie/admin-movie",
+    "pages/admin-movie-add/admin-movie-add",
+    "pages/admin-user/admin-user",
+    "pages/admin-user-add/admin-user-add"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FF6B6B",
+    "navigationBarTitleText": "电影购票",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/movie/movie",
+        "text": "电影"
+      },
+      {
+        "pagePath": "pages/cinema/cinema",
+        "text": "影院"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
+}

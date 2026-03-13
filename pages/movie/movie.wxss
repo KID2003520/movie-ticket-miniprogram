@@ -1,0 +1,147 @@
+.container {
+  padding-bottom: 20rpx;
+  background-color: #f5f5f5;
+}
+
+.tab-bar {
+  display: flex;
+  background-color: #fff;
+  padding: 0 20rpx;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background-color: #FF6B6B;
+  border-radius: 3rpx;
+}
+
+.movie-list {
+  padding: 20rpx;
+}
+
+.movie-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.movie-poster {
+  width: 180rpx;
+  height: 250rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+}
+
+.movie-content {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.movie-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.movie-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 16rpx;
+}
+
+.movie-rating {
+  display: flex;
+  align-items: baseline;
+}
+
+.rating-value {
+  font-size: 32rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.rating-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 4rpx;
+}
+
+.movie-meta {
+  margin: 16rpx 0;
+}
+
+.meta-item {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movie-price {
+  font-size: 28rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.buy-btn {
+  background-color: #FF6B6B;
+  color: #fff;
+  font-size: 26rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 30rpx;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+}

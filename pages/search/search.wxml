@@ -1,0 +1,54 @@
+<view class="container">
+  <view class="search-header">
+    <view class="search-input-wrapper">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索电影、影院" value="{{searchValue}}" bindinput="onSearchInput" bindconfirm="onSearch" confirm-type="search" />
+      <text wx:if="{{searchValue}}" class="clear-icon" bindtap="onClearInput">×</text>
+    </view>
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <view wx:if="{{!searched}}" class="search-content">
+    <view wx:if="{{historyList.length > 0}}" class="section">
+      <view class="section-header">
+        <text class="section-title">搜索历史</text>
+        <text class="clear-text" bindtap="onClearHistory">清空</text>
+      </view>
+      <view class="tag-list">
+        <view class="tag-item" wx:for="{{historyList}}" wx:key="*this" bindtap="onHistoryTap" data-keyword="{{item}}">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">热门搜索</view>
+      <view class="tag-list">
+        <view class="tag-item" wx:for="{{hotSearchList}}" wx:key="*this" bindtap="onHotSearchTap" data-keyword="{{item}}">{{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{searched}}" class="search-results">
+    <view wx:if="{{searchResults.length > 0}}" class="result-list">
+      <view class="result-item" wx:for="{{searchResults}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+        <image src="{{item.poster}}" mode="aspectFill" class="movie-poster"></image>
+        <view class="movie-info">
+          <text class="movie-title">{{item.title}}</text>
+          <view class="movie-meta">
+            <text class="movie-rating">{{item.rating}}分</text>
+            <text class="movie-genre">{{item.genre}}</text>
+          </view>
+          <text class="movie-price">{{item.price}}元起</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!loading && searchResults.length === 0}}" class="empty-state">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关结果</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>搜索中...</text>
+  </view>
+</view>

@@ -1,0 +1,73 @@
+<view class="container">
+  <view wx:if="{{order}}" class="detail-wrapper">
+    <view class="status-bar {{order.status}}">
+      <view class="status-content">
+        <text class="status-icon">{{order.status === 'paid' ? '✅' : order.status === 'pending' ? '⏱' : '❌'}}</text>
+        <text class="status-text">{{order.status === 'pending' ? '待支付' : order.status === 'paid' ? '已支付' : '已取消'}}</text>
+      </view>
+    </view>
+
+    <view class="movie-card">
+      <image src="{{order.moviePoster}}" mode="aspectFill" class="movie-poster"></image>
+      <view class="movie-info">
+        <text class="movie-title">{{order.movieTitle}}</text>
+        <text class="movie-meta">{{order.date}} {{order.startTime}}</text>
+        <text class="movie-meta">{{order.cinemaName}}</text>
+        <text class="movie-meta">{{order.hallName}}</text>
+      </view>
+    </view>
+
+    <view class="seat-card">
+      <view class="card-title">座位信息</view>
+      <view class="seat-list">
+        <text class="seat-item" wx:for="{{order.seats}}" wx:key="index">{{item.row}}排{{item.col}}座</text>
+      </view>
+    </view>
+
+    <view wx:if="{{order.status === 'paid'}}" class="qrcode-card">
+      <view class="card-title">取票码</view>
+      <image src="{{qrcodeUrl}}" mode="aspectFit" class="qrcode"></image>
+      <text class="qrcode-tip">请凭此二维码到影院取票</text>
+    </view>
+
+    <view class="order-card">
+      <view class="card-title">订单信息</view>
+      <view class="info-item">
+        <text class="info-label">订单编号</text>
+        <view class="info-value" bindtap="onCopyOrderNo">
+          <text>{{order.orderNo}}</text>
+          <text class="copy-btn">复制</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-label">下单时间</text>
+        <text class="info-value">{{order.createTime}}</text>
+      </view>
+      <view wx:if="{{order.payTime}}" class="info-item">
+        <text class="info-label">支付时间</text>
+        <text class="info-value">{{order.payTime}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">票价</text>
+        <text class="info-value">{{order.totalPrice / order.seats.length}}元/张</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">数量</text>
+        <text class="info-value">{{order.seats.length}}张</text>
+      </view>
+      <view class="info-item total">
+        <text class="info-label">总价</text>
+        <text class="info-value price">{{order.totalPrice}}元</text>
+      </view>
+    </view>
+
+    <view class="action-card">
+      <view wx:if="{{order.status === 'pending'}}" class="action-btn default" bindtap="onCancel">取消订单</view>
+      <view wx:if="{{order.status === 'pending'}}" class="action-btn primary" bindtap="onPay">立即支付</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

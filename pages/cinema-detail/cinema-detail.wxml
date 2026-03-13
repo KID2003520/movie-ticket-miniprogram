@@ -1,0 +1,49 @@
+<view class="container">
+  <view wx:if="{{cinema}}" class="detail-wrapper">
+    <view class="cinema-header">
+      <text class="cinema-name">{{cinema.name}}</text>
+      <text class="cinema-address">{{cinema.address}}</text>
+      <view class="cinema-tags">
+        <text class="tag" wx:for="{{cinema.tags}}" wx:key="index">{{item}}</text>
+      </view>
+      <view class="cinema-phone">
+        <text>📞 {{cinema.phone}}</text>
+      </view>
+      <view class="cinema-location" bindtap="onLocationTap">
+        <text>📍 查看地图</text>
+      </view>
+    </view>
+
+    <view class="date-bar">
+      <scroll-view scroll-x class="date-scroll">
+        <view class="date-list">
+          <view class="date-item {{currentDateIndex === index ? 'active' : ''}}" wx:for="{{dateList}}" wx:key="fullDate" bindtap="onDateChange" data-index="{{index}}">
+            <text class="date-text">{{item.date}}</text>
+            <text class="week-text">{{item.weekDay}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="schedule-list">
+      <view class="schedule-item" wx:for="{{schedules}}" wx:key="_id" bindtap="onScheduleTap" data-id="{{item._id}}">
+        <view class="schedule-time">
+          <text class="start-time">{{item.startTime}}</text>
+          <text class="end-time">{{item.endTime}}散场</text>
+        </view>
+        <view class="schedule-info">
+          <text class="hall-name">{{item.hallName}}</text>
+          <text class="hall-type">{{item.hallType}}</text>
+        </view>
+        <view class="schedule-price">
+          <text class="price">{{item.price}}元</text>
+          <view class="buy-btn">选座购票</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,215 @@
+.container {
+  padding-bottom: 120rpx;
+}
+
+.movie-info {
+  display: flex;
+  background-color: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.movie-poster {
+  width: 120rpx;
+  height: 160rpx;
+  border-radius: 8rpx;
+}
+
+.movie-detail {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.movie-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.movie-meta {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.screen-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.screen {
+  width: 400rpx;
+  height: 40rpx;
+  background: linear-gradient(to bottom, #e0e0e0, #f5f5f5);
+  border-radius: 0 0 50% 50%;
+  text-align: center;
+  line-height: 40rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.screen-shadow {
+  width: 500rpx;
+  height: 30rpx;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
+}
+
+.seat-container {
+  padding: 20rpx;
+  overflow-x: auto;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.row-label {
+  width: 40rpx;
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+}
+
+.seat-col {
+  margin: 0 6rpx;
+}
+
+.seat {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 8rpx;
+  background-color: #e8e8e8;
+}
+
+.seat.available {
+  background-color: #fff;
+  border: 2rpx solid #ddd;
+}
+
+.seat.selected {
+  background-color: #FF6B6B;
+  border: 2rpx solid #FF6B6B;
+}
+
+.seat.sold {
+  background-color: #ddd;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  padding: 30rpx 0;
+  gap: 40rpx;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-seat {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 6rpx;
+  margin-right: 10rpx;
+}
+
+.legend-seat.available {
+  background-color: #fff;
+  border: 2rpx solid #ddd;
+}
+
+.legend-seat.selected {
+  background-color: #FF6B6B;
+}
+
+.legend-seat.sold {
+  background-color: #ddd;
+}
+
+.legend-item text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.selected-info {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.selected-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.selected-seats {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.selected-seat {
+  font-size: 26rpx;
+  color: #FF6B6B;
+  background-color: #fff5f5;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-label {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.price-value {
+  font-size: 36rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.submit-btn {
+  background-color: #FF6B6B;
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 20rpx 60rpx;
+  font-size: 32rpx;
+}
+
+.submit-btn.disabled {
+  background-color: #ccc;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+}

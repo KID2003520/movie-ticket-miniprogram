@@ -1,0 +1,125 @@
+<view class="container">
+  <view class="form-section">
+    <view class="section-title">基本信息</view>
+    
+    <view class="form-item required">
+      <text class="label">电影名称</text>
+      <input class="input" placeholder="请输入电影名称" value="{{form.title}}" bindinput="onTitleInput" maxlength="50" />
+    </view>
+
+    <view class="form-item required">
+      <text class="label">电影类型</text>
+      <picker mode="multiSelector" range="{{genrePickerData}}" bindchange="onGenreChange" bindcolumnchange="onGenreColumnChange">
+        <view class="picker-input">
+          <text class="{{form.genre ? '' : 'placeholder'}}">{{form.genre || '请选择电影类型'}}</text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item required">
+      <text class="label">上映日期</text>
+      <picker mode="date" value="{{form.releaseDate}}" start="2020-01-01" end="2030-12-31" bindchange="onDateChange">
+        <view class="picker-input">
+          <text class="{{form.releaseDate ? '' : 'placeholder'}}">{{form.releaseDate || '请选择上映日期'}}</text>
+          <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item required">
+      <text class="label">电影时长</text>
+      <view class="input-with-unit">
+        <input class="input" type="number" placeholder="请输入时长" value="{{form.duration}}" bindinput="onDurationInput" maxlength="4" />
+        <text class="unit">分钟</text>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">导演</text>
+      <input class="input" placeholder="请输入导演姓名" value="{{form.director}}" bindinput="onDirectorInput" maxlength="30" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">主演</text>
+      <input class="input" placeholder="多个演员用逗号分隔" value="{{form.actors}}" bindinput="onActorsInput" maxlength="100" />
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-title">海报与简介</view>
+    
+    <view class="form-item required">
+      <text class="label">电影海报</text>
+      <view class="poster-upload" bindtap="onUploadPoster">
+        <image wx:if="{{form.poster}}" src="{{form.poster}}" mode="aspectFill" class="poster-preview"></image>
+        <view wx:else class="upload-placeholder">
+          <text class="upload-icon">+</text>
+          <text class="upload-text">上传海报</text>
+        </view>
+      </view>
+      <text class="tip">建议尺寸：300×420，支持jpg/png格式</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">剧情简介</text>
+      <textarea class="textarea" placeholder="请输入剧情简介（最多200字）" value="{{form.description}}" bindinput="onDescriptionInput" maxlength="200" />
+      <text class="word-count">{{form.description.length || 0}}/200</text>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-title">票价设置</view>
+    
+    <view class="form-item required">
+      <text class="label">最低票价</text>
+      <view class="input-with-unit">
+        <input class="input" type="digit" placeholder="请输入票价" value="{{form.price}}" bindinput="onPriceInput" />
+        <text class="unit">元</text>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label">电影评分</text>
+      <view class="input-with-unit">
+        <input class="input" type="digit" placeholder="0-10分" value="{{form.rating}}" bindinput="onRatingInput" maxlength="3" />
+        <text class="unit">分</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-title">上映状态</view>
+    
+    <view class="form-item">
+      <text class="label">状态设置</text>
+      <view class="status-options">
+        <view class="status-option {{form.status === 'showing' ? 'active' : ''}}" bindtap="onStatusChange" data-status="showing">
+          <text>上映中</text>
+        </view>
+        <view class="status-option {{form.status === 'coming' ? 'active' : ''}}" bindtap="onStatusChange" data-status="coming">
+          <text>即将上映</text>
+        </view>
+        <view class="status-option {{form.status === 'off' ? 'active' : ''}}" bindtap="onStatusChange" data-status="off">
+          <text>已下架</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-actions">
+    <view class="btn cancel" bindtap="onCancel">取消</view>
+    <view class="btn submit" bindtap="onSubmit">{{isEdit ? '保存修改' : '添加电影'}}</view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showConfirmModal}}" bindtap="onCancelModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-title">提示</view>
+    <view class="modal-desc">有未保存的修改，确定要离开吗？</view>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="onCancelModal">继续编辑</view>
+      <view class="modal-btn confirm" bindtap="onConfirmLeave">离开</view>
+    </view>
+  </view>
+</view>

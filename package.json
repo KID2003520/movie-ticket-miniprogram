@@ -1,0 +1,10 @@
+{
+  "name": "movie-ticket-miniprogram",
+  "version": "1.0.0",
+  "description": "电影购票微信小程序",
+  "main": "app.js",
+  "scripts": {},
+  "dependencies": {
+    "@vant/weapp": "^1.11.6"
+  }
+}

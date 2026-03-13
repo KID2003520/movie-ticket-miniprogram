@@ -1,0 +1,83 @@
+<view class="container">
+  <view class="filter-bar">
+    <view class="filter-row">
+      <picker mode="selector" range="{{levelList}}" range-key="label" bindchange="onLevelChange">
+        <view class="filter-item">
+          <text>{{currentLevelLabel || '用户等级'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <picker mode="selector" range="{{statusList}}" range-key="label" bindchange="onStatusChange">
+        <view class="filter-item">
+          <text>{{currentStatusLabel || '账号状态'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <picker mode="selector" range="{{sortList}}" range-key="label" bindchange="onSortChange">
+        <view class="filter-item">
+          <text>{{currentSortLabel || '排序方式'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索用户名/手机号" value="{{keyword}}" bindinput="onSearchInput" />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+  </view>
+
+  <view class="user-list">
+    <view class="user-item" wx:for="{{users}}" wx:key="_id">
+      <image src="{{item.avatarUrl || 'https://picsum.photos/100/100?random=' + index}}" mode="aspectFill" class="user-avatar"></image>
+      <view class="user-info">
+        <view class="user-header">
+          <text class="user-name">{{item.nickName || '未设置昵称'}}</text>
+          <text class="level-tag {{item.level}}">{{item.level === 'admin' ? '管理员' : item.level === 'vip' ? '会员' : '普通用户'}}</text>
+        </view>
+        <text class="user-meta">手机: {{item.phone || '未绑定'}}</text>
+        <text class="user-meta">注册: {{item.createTime}}</text>
+        <view class="user-stats">
+          <text class="stat">消费: ¥{{item.totalSpent || 0}}</text>
+          <text class="stat">订单: {{item.orderCount || 0}}笔</text>
+          <text class="status-text {{item.status}}">{{item.status === 'active' ? '正常' : '已禁用'}}</text>
+        </view>
+      </view>
+      <view class="user-actions">
+        <view class="action-btn edit" bindtap="onEdit" data-id="{{item._id}}">编辑</view>
+        <view class="action-btn {{item.status === 'disabled' ? 'enable' : 'disable'}}" bindtap="onToggleStatus" data-id="{{item._id}}" data-status="{{item.status}}">
+          {{item.status === 'disabled' ? '启用' : '禁用'}}
+        </view>
+        <view class="action-btn reset" bindtap="onResetPassword" data-id="{{item._id}}">重置密码</view>
+        <view class="action-btn delete" bindtap="onDelete" data-id="{{item._id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && users.length === 0}}" class="empty-state">
+    <text class="empty-icon">👥</text>
+    <text class="empty-text">暂无用户数据</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view class="add-btn" bindtap="onAddUser">
+    <text>+</text>
+  </view>
+
+  <view wx:if="{{hasMore && users.length > 0}}" class="load-more" bindtap="onLoadMore">
+    <text>加载更多</text>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showConfirmModal}}" bindtap="onCancelModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-title">{{modalTitle}}</view>
+    <view class="modal-desc">{{modalDesc}}</view>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="onCancelModal">取消</view>
+      <view class="modal-btn confirm" bindtap="onConfirmModal">确定</view>
+    </view>
+  </view>
+</view>

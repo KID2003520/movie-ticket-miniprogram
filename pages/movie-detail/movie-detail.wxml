@@ -1,0 +1,105 @@
+<view class="container">
+  <view wx:if="{{movie}}" class="detail-wrapper">
+    <view class="movie-header">
+      <image src="{{movie.poster}}" mode="aspectFill" class="poster-bg"></image>
+      <view class="header-content">
+        <image src="{{movie.poster}}" mode="aspectFill" class="poster"></image>
+        <view class="info">
+          <text class="title">{{movie.title}}</text>
+          <view class="rating-box">
+            <text class="rating">{{movie.rating}}</text>
+            <text class="rating-text">分</text>
+          </view>
+          <text class="meta">{{movie.genre}}</text>
+          <text class="meta">{{movie.duration}}分钟</text>
+          <text class="meta">{{movie.releaseDate}} 上映</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-bar">
+      <view class="action-item" bindtap="onCollect">
+        <text class="action-icon">{{isCollected ? '★' : '☆'}}</text>
+        <text class="action-text">{{isCollected ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="action-item" bindtap="onShowCommentInput">
+        <text class="action-icon">💬</text>
+        <text class="action-text">评论</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">剧情简介</view>
+      <text class="description">{{movie.description}}</text>
+    </view>
+
+    <view class="section">
+      <view class="section-title">演职人员</view>
+      <view class="crew-info">
+        <view class="crew-item">
+          <text class="crew-label">导演</text>
+          <text class="crew-value">{{movie.director}}</text>
+        </view>
+        <view class="crew-item">
+          <text class="crew-label">主演</text>
+          <text class="crew-value">{{movie.actors}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">用户评论 ({{comments.length}})</text>
+        <text class="section-more" bindtap="onShowCommentInput">写评论</text>
+      </view>
+      <view class="comment-list">
+        <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+          <view class="comment-header">
+            <view class="comment-avatar">{{item.nickName[0]}}</view>
+            <view class="comment-info">
+              <text class="comment-name">{{item.nickName}}</text>
+              <view class="comment-rating">
+                <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{item <= item.rating ? 'active' : ''}}">★</text>
+              </view>
+            </view>
+            <text class="comment-time">{{item.createTime}}</text>
+          </view>
+          <text class="comment-content">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <view class="price-info">
+        <text class="price-label">票价</text>
+        <text class="price-value">{{movie.price}}元</text>
+      </view>
+      <view class="buy-btn" bindtap="onBuyTicket">立即购票</view>
+    </view>
+  </view>
+
+  <view wx:if="{{showCommentInput}}" class="comment-modal">
+    <view class="comment-modal-mask" bindtap="onHideCommentInput"></view>
+    <view class="comment-modal-content">
+      <view class="modal-header">
+        <text class="modal-title">发表评论</text>
+        <text class="modal-close" bindtap="onHideCommentInput">×</text>
+      </view>
+      <view class="rating-select">
+        <text class="rating-label">评分：</text>
+        <view class="stars">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{item <= commentRating ? 'active' : ''}}" bindtap="onRatingChange" data-rating="{{item}}">★</text>
+        </view>
+      </view>
+      <textarea class="comment-input" placeholder="说说你的看法..." value="{{commentText}}" bindinput="onCommentInput" maxlength="200"></textarea>
+      <view class="modal-footer">
+        <view class="cancel-btn" bindtap="onHideCommentInput">取消</view>
+        <view class="submit-btn" bindtap="onSubmitComment">提交</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>
