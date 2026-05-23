@@ -1,3 +1,6 @@
+const appConfig = require('../../utils/config.js');
+const backendApi = require('../../utils/backendApi.js');
+
 Page({
   data: {
     users: [],
@@ -43,50 +46,82 @@ Page({
     this.loadUsers();
   },
 
+  /** 筛选/排序/分页（本地 mock 与后端列表共用） */
+  applyUserListPipeline: function (allUsers) {
+    let filtered = [...allUsers];
+
+    if (this.data.currentLevel) {
+      filtered = filtered.filter((u) => u.level === this.data.currentLevel);
+    }
+
+    if (this.data.currentStatus) {
+      filtered = filtered.filter((u) => u.status === this.data.currentStatus);
+    }
+
+    if (this.data.keyword) {
+      const kw = this.data.keyword.toLowerCase();
+      filtered = filtered.filter(
+        (u) =>
+          (u.nickName && u.nickName.toLowerCase().includes(kw)) ||
+          (u.phone && u.phone.includes(this.data.keyword))
+      );
+    }
+
+    filtered.sort((a, b) => {
+      if (this.data.currentSort === 'totalSpent') {
+        return (b.totalSpent || 0) - (a.totalSpent || 0);
+      }
+      if (this.data.currentSort === 'orderCount') {
+        return (b.orderCount || 0) - (a.orderCount || 0);
+      }
+      return new Date(b.createTime || 0) - new Date(a.createTime || 0);
+    });
+
+    const end = this.data.page * this.data.pageSize;
+    const pagedUsers = filtered.slice(0, end);
+    return {
+      pagedUsers,
+      hasMore: end < filtered.length
+    };
+  },
+
   loadUsers: function () {
     this.setData({ loading: true });
+    const that = this;
 
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let allUsers = wx.getStorageSync('adminUsers') || this.getMockUsers();
-        
-        let filtered = [...allUsers];
-        
-        if (this.data.currentLevel) {
-          filtered = filtered.filter(u => u.level === this.data.currentLevel);
-        }
-        
-        if (this.data.currentStatus) {
-          filtered = filtered.filter(u => u.status === this.data.currentStatus);
-        }
-        
-        if (this.data.keyword) {
-          filtered = filtered.filter(u => 
-            (u.nickName && u.nickName.toLowerCase().includes(this.data.keyword.toLowerCase())) ||
-            (u.phone && u.phone.includes(this.data.keyword))
-          );
-        }
-        
-        filtered.sort((a, b) => {
-          if (this.data.currentSort === 'totalSpent') {
-            return (b.totalSpent || 0) - (a.totalSpent || 0);
-          } else if (this.data.currentSort === 'orderCount') {
-            return (b.orderCount || 0) - (a.orderCount || 0);
-          } else {
-            return new Date(b.createTime) - new Date(a.createTime);
-          }
+    if (appConfig.USE_BACKEND_ONLY) {
+      return backendApi
+        .getAdminUsers()
+        .then((body) => {
+          const items = (body.data && body.data.items) || [];
+          const allUsers = items.map((u) => ({
+            ...u,
+            createTime: u.createTime ? String(u.createTime).slice(0, 10) : '',
+            status: u.status || 'active'
+          }));
+          const { pagedUsers, hasMore } = that.applyUserListPipeline(allUsers);
+          that.setData({
+            users: pagedUsers,
+            hasMore,
+            loading: false
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          wx.showToast({ title: (err && err.message) || '加载失败', icon: 'none' });
+          that.setData({ users: [], hasMore: false, loading: false });
         });
+    }
 
-        const start = 0;
-        const end = this.data.page * this.data.pageSize;
-        const pagedUsers = filtered.slice(start, end);
-
-        this.setData({
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let allUsers = wx.getStorageSync('adminUsers') || that.getMockUsers();
+        const { pagedUsers, hasMore } = that.applyUserListPipeline(allUsers);
+        that.setData({
           users: pagedUsers,
-          hasMore: end < filtered.length,
+          hasMore,
           loading: false
         });
-
         resolve();
       }, 500);
     });
@@ -197,7 +232,7 @@ Page({
     this.setData({
       showConfirmModal: true,
       modalTitle: '确认删除',
-      modalDesc: '删除后用户消费记录将保留，确定要删除该用户吗？',
+      modalDesc: '将彻底删除该用户及其关联订单/收藏/评论数据，确定继续吗？',
       confirmAction: 'delete',
       confirmData: { id }
     });
@@ -228,6 +263,10 @@ Page({
   },
 
   doToggleStatus: function (id, newStatus) {
+    if (appConfig.USE_BACKEND_ONLY) {
+      wx.showToast({ title: '云端模式请使用数据库维护用户状态', icon: 'none' });
+      return;
+    }
     const users = wx.getStorageSync('adminUsers') || [];
     const index = users.findIndex(u => u._id === id);
     
@@ -246,6 +285,10 @@ Page({
   },
 
   doResetPassword: function (id) {
+    if (appConfig.USE_BACKEND_ONLY) {
+      wx.showToast({ title: '云端模式请使用数据库或后续接口重置密码', icon: 'none' });
+      return;
+    }
     const users = wx.getStorageSync('adminUsers') || [];
     const index = users.findIndex(u => u._id === id);
     
@@ -261,6 +304,18 @@ Page({
   },
 
   doDelete: function (id) {
+    if (appConfig.USE_BACKEND_ONLY) {
+      return backendApi
+        .deleteAdminUser(id)
+        .then(() => {
+          wx.showToast({ title: '删除成功', icon: 'success' });
+          this.setData({ page: 1, users: [] });
+          this.loadUsers();
+        })
+        .catch((err) => {
+          wx.showToast({ title: (err && err.message) || '删除失败', icon: 'none' });
+        });
+    }
     let users = wx.getStorageSync('adminUsers') || [];
     users = users.filter(u => u._id !== id);
     wx.setStorageSync('adminUsers', users);

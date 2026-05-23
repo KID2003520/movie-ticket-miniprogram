@@ -1,0 +1,45 @@
+%% UML 用例图语义，语法使用通用 flowchart（兼容旧版 Mermaid / VS Code）
+%% 椭圆节点模拟「用例」，虚线箭头表示 include
+
+flowchart LR
+    Actor((用户))
+
+    subgraph SYS["用户功能模块"]
+        direction TB
+        UC1([浏览首页与影片推荐])
+        UC2([搜索影片])
+        UC3([查看影院与场次排期])
+        UC4([在线选座])
+        UC5([创建订单])
+        UC6([订单查询与支付])
+        UC7([退款或取消订单])
+        UC8([我的收藏])
+        UC9([优惠券])
+        UC10([账户与设置])
+        UC11([客服中心])
+        UCLogin([登录])
+    end
+
+    Actor --> UC1
+    Actor --> UC2
+    Actor --> UC3
+    Actor --> UC4
+    Actor --> UC5
+    Actor --> UC6
+    Actor --> UC7
+    Actor --> UC8
+    Actor --> UC9
+    Actor --> UC10
+    Actor --> UC11
+
+    UC1 -.->|include| UCLogin
+    UC2 -.->|include| UCLogin
+    UC3 -.->|include| UCLogin
+    UC4 -.->|include| UCLogin
+    UC5 -.->|include| UCLogin
+    UC6 -.->|include| UCLogin
+    UC7 -.->|include| UCLogin
+    UC8 -.->|include| UCLogin
+    UC9 -.->|include| UCLogin
+    UC10 -.->|include| UCLogin
+    UC11 -.->|include| UCLogin

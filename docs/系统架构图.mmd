@@ -1,0 +1,72 @@
+%% 在线电影购票微信小程序 — 系统架构图（分层 + 技术栈 + 业务模块）
+%% 风格参考：医院管理系统架构图（左分层 / 上前端 / 中模块 / 右权限+框架 / 下数据库）
+%% 渲染：https://mermaid.live  → Export PNG/SVG
+%% 论文插图：可导出后在 PPT 中设黑底白框，与参考图一致
+
+%%{init: {'flowchart': {'curve': 'linear', 'padding': 12}}}%%
+
+flowchart TB
+  classDef layerBox fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
+  classDef techBox fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
+  classDef modBox fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
+  classDef sideBox fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
+  classDef dbBox fill:#ffffff,stroke:#333333,stroke-width:3px,color:#000000
+
+  %% ========== 顶部：前端技术栈 ==========
+  subgraph FE_STACK["前端技术栈（微信小程序端）"]
+    direction LR
+    FE1["WXML / WXSS<br/>页面结构与样式"]:::techBox
+    FE2["微信开放能力<br/>定位 · 存储 · 导航"]:::techBox
+    FE3["utils/backendApi.js<br/>HTTP 请求封装"]:::techBox
+    FE4["微信小程序<br/>Page + 自定义 TabBar"]:::techBox
+  end
+
+  %% ========== 主体：左分层 + 中模块 + 右后端 ==========
+  subgraph MAIN[" "]
+    direction LR
+
+    subgraph LAYERS["软件架构分层"]
+      direction TB
+      L1["视图层<br/>pages/*.wxml · wxss"]:::layerBox
+      L2["控制层<br/>pages/*.js · 路由/事件"]:::layerBox
+      L3["业务层<br/>utils · 页面业务逻辑"]:::layerBox
+      L4["数据交互层<br/>backendApi → REST"]:::layerBox
+      L5["数据层<br/>MySQL 持久化"]:::layerBox
+      L1 ~~~ L2 ~~~ L3 ~~~ L4 ~~~ L5
+    end
+
+    subgraph MODULES["核心业务模块"]
+      direction TB
+      subgraph MOD_R1[" "]
+        direction LR
+        M1["用户模块<br/>登录注册 · 个人中心 · 设置"]:::modBox
+        M2["影片模块<br/>热映待映 · 搜索 · 详情"]:::modBox
+        M3["影院场次模块<br/>影院列表 · 场次 · 选座"]:::modBox
+      end
+      subgraph MOD_R2[" "]
+        direction LR
+        M4["购票订单模块<br/>下单 · 支付 · 订单管理"]:::modBox
+        M5["优惠券模块<br/>券商城 · 我的券 · 抵扣"]:::modBox
+        M6["管理运营模块<br/>后台管理 · 积分 · 退款"]:::modBox
+      end
+      MOD_R1 ~~~ MOD_R2
+    end
+
+    subgraph BACKEND_SIDE["后端与安全"]
+      direction TB
+      SEC["权限控制<br/>x-openid 鉴权<br/>isAdmin 管理端"]:::sideBox
+      SRV["Node.js<br/>Express 4.x"]:::sideBox
+      SEC ~~~ SRV
+    end
+  end
+
+  %% ========== 底部：数据库 ==========
+  DB[("MySQL<br/>movie_ticket_db")]:::dbBox
+
+  FE_STACK ~~~ MAIN
+  MAIN ~~~ DB
+
+  %% 分层与模块对应说明（虚线表示逻辑归属，非调用链）
+  L1 -.-> FE_STACK
+  L4 -.-> SRV
+  L5 -.-> DB

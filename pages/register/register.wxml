@@ -22,20 +22,20 @@
       <text class="error-tip" wx:if="{{codeError}}">{{codeError}}</text>
     </view>
 
-    <block wx:if="{{type === 'register'}}">
+    <block wx:if="{{type === 'register' || type === 'login'}}">
       <view class="form-item">
         <text class="label">设置密码</text>
         <input class="input {{passwordError ? 'error' : ''}}" type="password" placeholder="请设置密码（至少6位）" value="{{password}}" bindinput="onPasswordInput" />
         <text class="error-tip" wx:if="{{passwordError}}">{{passwordError}}</text>
       </view>
 
-      <view class="form-item">
+      <view class="form-item" wx:if="{{type === 'register'}}">
         <text class="label">确认密码</text>
         <input class="input {{confirmError ? 'error' : ''}}" type="password" placeholder="请再次输入密码" value="{{confirmPassword}}" bindinput="onConfirmPasswordInput" />
         <text class="error-tip" wx:if="{{confirmError}}">{{confirmError}}</text>
       </view>
 
-      <view class="protocol-row" bindtap="toggleProtocol">
+      <view class="protocol-row" wx:if="{{type === 'register'}}" bindtap="toggleProtocol">
         <view class="checkbox {{agreeProtocol ? 'checked' : ''}}">
           <text wx:if="{{agreeProtocol}}">✓</text>
         </view>

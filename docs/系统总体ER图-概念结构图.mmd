@@ -1,0 +1,119 @@
+%% 电影购票小程序 — 总体概念结构图（类似电商 ER：实体矩形 + 联系菱形 + 1/n）
+%% 可用 https://mermaid.live 导出 PNG，论文可据此手绘 Chen 图
+%% 表名与 backend MySQL 一致
+
+flowchart TB
+  %% ========== 实体（属性写在框内）==========
+
+  用户["用户 users<br/>────────────<br/>用户编号 _id 主键<br/>手机号 phone<br/>昵称 nickName<br/>密码 password<br/>是否管理员 isAdmin<br/>账号状态 account_status<br/>注册时间 createTime"]
+
+  影片["影片 movies<br/>────────────<br/>影片编号 _id 主键<br/>片名 title<br/>海报 poster<br/>评分 rating<br/>类型 genre<br/>票价分 price<br/>状态 status 热映/待映<br/>上映日 releaseDate<br/>热度 hot"]
+
+  影院["影院 cinemas<br/>────────────<br/>影院编号 _id 主键<br/>名称 name<br/>城市 city<br/>地址 address<br/>纬度 latitude<br/>经度 longitude<br/>最低价分 minPrice"]
+
+  影厅["影厅 cinema_halls<br/>────────────<br/>影厅编号 _id 主键<br/>影院编号 cinemaId 外键<br/>影厅名 name<br/>类型 hallType<br/>行数 seatRows<br/>列数 seatCols"]
+
+  场次["场次 schedules<br/>────────────<br/>场次编号 _id 主键<br/>影片编号 movieId 外键<br/>影院编号 cinemaId 外键<br/>放映日期 date<br/>开始时间 startTime<br/>票价分 price<br/>可售座 availableSeats"]
+
+  座位["座位 seats<br/>────────────<br/>座位编号 _id 主键<br/>场次编号 scheduleId 外键<br/>行号 row 列号 col<br/>状态 status 可选/锁定/已售<br/>订单编号 orderId 外键"]
+
+  订单["订单 orders<br/>────────────<br/>订单编号 _id 主键<br/>订单号 orderNo 唯一<br/>用户标识 _openid 外键<br/>场次编号 scheduleId 外键<br/>座位快照 seatsJson<br/>座位数 seatCount<br/>总价分 totalPrice<br/>优惠券编号 couponId 外键<br/>状态 status 待付/已付/退款等<br/>支付时间 payTime"]
+
+  收藏["收藏 collections<br/>────────────<br/>收藏编号 _id 主键<br/>用户标识 _openid 外键<br/>影片编号 movieId 外键<br/>收藏时间 createTime"]
+
+  影评["影评 movie_comments<br/>────────────<br/>评论编号 _id 主键<br/>用户标识 _openid 外键<br/>影片编号 movieId 外键<br/>评分 rating<br/>内容 content<br/>创建时间 createTime"]
+
+  券模板["优惠券模板 coupon_templates<br/>────────────<br/>模板编号 _id 主键<br/>名称 title<br/>面额分 amount<br/>门槛分 minAmount<br/>售价分 sellPrice<br/>有效天数 validDays<br/>库存 stock"]
+
+  用户券["用户优惠券 user_coupons<br/>────────────<br/>券编号 _id 主键<br/>用户标识 _openid 外键<br/>模板编号 templateId 外键<br/>状态 status 可用/锁定/已用<br/>锁定订单 lockOrderId 外键<br/>使用订单 usedOrderId 外键<br/>过期时间 expireTime"]
+
+  购券单["购券订单 coupon_purchase_orders<br/>────────────<br/>购券编号 _id 主键<br/>用户标识 _openid 外键<br/>模板编号 templateId 外键<br/>总价分 totalPrice<br/>状态 status<br/>支付时间 payTime"]
+
+  积分余额["积分余额 user_points_balance<br/>────────────<br/>用户标识 _openid 主键外键<br/>积分 balance<br/>更新时间 updateTime"]
+
+  积分流水["积分流水 user_points_log<br/>────────────<br/>流水编号 _id 主键<br/>用户标识 _openid 外键<br/>变动 delta<br/>来源类型 source_type<br/>来源编号 source_id<br/>创建时间 createTime"]
+
+  退款申请["退款申请 order_refund_requests<br/>────────────<br/>申请编号 _id 主键<br/>订单编号 orderId 外键<br/>申请人 requesterOpenid 外键<br/>状态 status<br/>审核人 reviewerOpenid 外键<br/>申请时间 createTime"]
+
+  管理审计["管理审计 admin_security_audit<br/>────────────<br/>日志编号 _id 主键<br/>操作人 operator_openid 外键<br/>类别 category<br/>动作 action<br/>操作时间 createTime"]
+
+  %% ========== 联系（菱形）==========
+
+  下单{{下单}}
+  排片{{排片}}
+  放映{{放映}}
+  下设{{下设}}
+  生成座位{{生成座位}}
+  占用{{售出占用}}
+  选用场次{{选用场次}}
+  收藏联系{{收藏}}
+  被收藏{{被收藏}}
+  发表{{发表}}
+  被评{{被评}}
+  持有{{持有}}
+  购买券{{购买券}}
+  发放{{发放}}
+  使用券{{使用优惠券}}
+  售券{{购券}}
+  拥有积分{{拥有}}
+  产生流水{{产生流水}}
+  申请退款{{申请退款}}
+  管理操作{{管理操作}}
+
+  %% ========== 购票主链路 ==========
+  用户 -->|1| 下单
+  下单 -->|n| 订单
+
+  影片 -->|1| 排片
+  排片 -->|n| 场次
+
+  影院 -->|1| 放映
+  放映 -->|n| 场次
+
+  影院 -->|1| 下设
+  下设 -->|n| 影厅
+
+  场次 -->|1| 生成座位
+  生成座位 -->|n| 座位
+
+  场次 -->|1| 选用场次
+  选用场次 -->|n| 订单
+
+  订单 -->|1| 占用
+  占用 -->|n| 座位
+
+  %% ========== 用户互动 ==========
+  用户 -->|1| 收藏联系
+  收藏联系 -->|n| 收藏
+  影片 -->|1| 被收藏
+  被收藏 -->|n| 收藏
+  影片 -->|1| 被评
+  被评 -->|n| 影评
+  用户 -->|1| 发表
+  发表 -->|n| 影评
+
+  %% ========== 优惠券 ==========
+  用户 -->|1| 持有
+  持有 -->|n| 用户券
+  用户 -->|1| 购买券
+  购买券 -->|n| 购券单
+  券模板 -->|1| 发放
+  发放 -->|n| 用户券
+  券模板 -->|1| 售券
+  售券 -->|n| 购券单
+  订单 -->|0..1| 使用券
+  使用券 -->|1| 用户券
+
+  %% ========== 积分与售后 ==========
+  用户 -->|1| 拥有积分
+  拥有积分 -->|1| 积分余额
+  用户 -->|1| 产生流水
+  产生流水 -->|n| 积分流水
+
+  订单 -->|1| 申请退款
+  申请退款 -->|n| 退款申请
+  用户 -->|1| 申请退款
+  申请退款 -->|n| 退款申请
+
+  用户 -->|1| 管理操作
+  管理操作 -->|n| 管理审计

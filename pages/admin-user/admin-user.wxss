@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background-color: #f5f6fa;
+  background-color: #f5f5f5;
   padding-bottom: 120rpx;
 }
 
@@ -54,7 +54,7 @@
 .search-btn {
   width: 140rpx;
   height: 72rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
   border-radius: 8rpx;
   display: flex;
@@ -172,8 +172,8 @@
 }
 
 .action-btn.edit {
-  background: #e3f2fd;
-  color: #2196f3;
+  background: #fff2eb;
+  color: #ff5f16;
 }
 
 .action-btn.disable {
@@ -225,7 +225,7 @@
   bottom: 100rpx;
   width: 100rpx;
   height: 100rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -242,7 +242,7 @@
 .load-more {
   text-align: center;
   padding: 30rpx;
-  color: #667eea;
+  color: #ff5f16;
   font-size: 28rpx;
 }
 
@@ -302,6 +302,6 @@
 }
 
 .modal-btn.confirm {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
 }

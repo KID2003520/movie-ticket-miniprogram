@@ -1,0 +1,179 @@
+.container {
+  min-height: 100vh;
+  background: #f5f6f8;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.05);
+}
+
+.toolbar {
+  padding: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #222;
+}
+
+.sub {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.range-btn {
+  background: #ffefe6;
+  color: #ff5f16;
+  font-size: 24rpx;
+  padding: 12rpx 18rpx;
+  border-radius: 12rpx;
+}
+
+.summary-grid {
+  margin-top: 16rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14rpx;
+}
+
+.summary-item {
+  padding: 24rpx 16rpx;
+  text-align: center;
+}
+
+.summary-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #ff5f16;
+}
+
+.summary-label {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #888;
+}
+
+.section {
+  margin-top: 16rpx;
+  padding: 20rpx;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.loading {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.table-row {
+  margin-top: 12rpx;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.table-head {
+  font-weight: 600;
+  color: #888;
+}
+
+.c-date {
+  text-align: left;
+}
+
+.c-num {
+  text-align: center;
+}
+
+.tag-list {
+  margin-top: 12rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.tag-item {
+  background: #f8f9fb;
+  border-radius: 12rpx;
+  padding: 12rpx 16rpx;
+  display: flex;
+  gap: 10rpx;
+}
+
+.tag-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.tag-value {
+  font-size: 24rpx;
+  color: #ff5f16;
+  font-weight: 600;
+}
+
+.rank-item {
+  margin-top: 12rpx;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f2f2f2;
+}
+
+.rank-item:last-child {
+  border-bottom: none;
+}
+
+.rank-name {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.rank-meta {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.empty {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #aaa;
+}
+
+.export-btn {
+  margin: 24rpx 0 12rpx;
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
+  border-radius: 14rpx;
+  color: #fff;
+  text-align: center;
+  font-size: 28rpx;
+  padding: 20rpx 0;
+}

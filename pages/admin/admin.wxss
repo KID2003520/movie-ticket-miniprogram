@@ -1,11 +1,11 @@
 .container {
   min-height: 100vh;
-  background-color: #f5f6fa;
+  background-color: #f5f5f5;
   padding-bottom: 40rpx;
 }
 
 .admin-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   padding: 40rpx 30rpx;
   padding-top: 60rpx;
 }
@@ -56,7 +56,15 @@
   font-size: 32rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 24rpx;
+  margin-bottom: 12rpx;
+}
+
+.stats-hint {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+  line-height: 1.4;
 }
 
 .stats-grid {
@@ -76,7 +84,7 @@
   display: block;
   font-size: 44rpx;
   font-weight: bold;
-  color: #667eea;
+  color: #ff5f16;
   margin-bottom: 8rpx;
 }
 
@@ -131,19 +139,23 @@
 }
 
 .menu-icon.movie {
-  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
 }
 
 .menu-icon.user {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  background: linear-gradient(90deg, #34b368 0%, #24a95d 100%);
 }
 
 .menu-icon.order {
-  background: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%);
+  background: linear-gradient(90deg, #4e86ff 0%, #4c73f5 100%);
+}
+
+.menu-icon.points {
+  background: linear-gradient(90deg, #9b59b6 0%, #8e44ad 100%);
 }
 
 .menu-icon.cinema {
-  background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%);
+  background: linear-gradient(90deg, #ff9f2f 0%, #ff7f1f 100%);
 }
 
 .menu-content {

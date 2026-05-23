@@ -8,47 +8,76 @@
     "pages/seat-selection/seat-selection",
     "pages/order/order",
     "pages/order-detail/order-detail",
+    "pages/pay-alipay/pay-alipay",
     "pages/user/user",
     "pages/login/login",
     "pages/register/register",
     "pages/search/search",
+    "pages/coupon/coupon",
+    "pages/collection/collection",
+    "pages/customer-service/customer-service",
+    "pages/settings/settings",
+    "pages/profile/profile",
+    "pages/points/points",
     "pages/admin/admin",
+    "pages/admin-report/admin-report",
+    "pages/admin-cinema/admin-cinema",
+    "pages/admin-cinema-halls/admin-cinema-halls",
     "pages/admin-movie/admin-movie",
     "pages/admin-movie-add/admin-movie-add",
     "pages/admin-user/admin-user",
-    "pages/admin-user-add/admin-user-add"
+    "pages/admin-user-add/admin-user-add",
+    "pages/admin-order/admin-order",
+    "pages/admin-order-detail/admin-order-detail",
+    "pages/admin-points/admin-points"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FF6B6B",
-    "navigationBarTitleText": "电影购票",
-    "navigationBarTextStyle": "white"
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "淘票票",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF6B6B",
+    "custom": true,
+    "color": "#666666",
+    "selectedColor": "#ff5533",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
       },
       {
         "pagePath": "pages/movie/movie",
-        "text": "电影"
+        "text": "电影",
+        "iconPath": "images/tab/movie.png",
+        "selectedIconPath": "images/tab/movie-active.png"
       },
       {
         "pagePath": "pages/cinema/cinema",
-        "text": "影院"
+        "text": "影院",
+        "iconPath": "images/tab/cinema.png",
+        "selectedIconPath": "images/tab/cinema-active.png"
       },
       {
         "pagePath": "pages/user/user",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "images/tab/user.png",
+        "selectedIconPath": "images/tab/user-active.png"
       }
     ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-  "cloud": true
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于为您推荐附近的影院和电影"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ]
 }

@@ -1,0 +1,37 @@
+<view class="container" wx:if="{{order}}">
+  <view class="card block">
+    <view class="row1">
+      <text class="ono">{{order.orderNo}}</text>
+      <text class="pill {{order.status}}">{{order.statusLabel}}</text>
+    </view>
+    <text class="t">{{order.movieTitle}}</text>
+    <text class="s">场次 {{order.scheduleId}} · {{order.date}} {{order.startTime}}</text>
+    <text class="s">{{order.cinemaName}} {{order.hallName}}</text>
+    <text class="s">座位 {{order.seatText}}</text>
+    <text class="s">金额 ¥{{order.priceYuan}} · 用户 {{order.userNick || '—'}} {{order.userPhone || order._openid}}</text>
+    <text class="s">创建 {{order.createTime}}</text>
+    <text class="s" wx:if="{{order.payTime}}">支付 {{order.payTime}}</text>
+    <view class="warn" wx:if="{{order.refundRequestStatus === 'pending'}}">
+      <text>退款审批中 · {{order.refundRequestTime}}</text>
+      <text class="s" wx:if="{{order.refundRequestNote}}">说明：{{order.refundRequestNote}}</text>
+    </view>
+  </view>
+
+  <view class="card block">
+    <text class="lab">操作备注（可选）</text>
+    <textarea class="ta" maxlength="255" placeholder="写入审计或退款说明" value="{{note}}" bindinput="onNote" />
+  </view>
+
+  <view class="actions">
+    <button class="btn primary" bindtap="onSyncAlipay">核对支付宝状态</button>
+    <button class="btn ghost" wx:if="{{order.status === 'pending'}}" bindtap="onCancelPending">取消待支付</button>
+    <button class="btn ghost" wx:if="{{order.status === 'paid' && order.refundRequestStatus !== 'pending'}}" bindtap="onRefundRequest">发起退款审批</button>
+    <button class="btn primary" wx:if="{{order.status === 'paid' && order.refundRequestStatus === 'pending'}}" bindtap="onRefundApprove">批准退款</button>
+    <button class="btn ghost" wx:if="{{order.status === 'paid' && order.refundRequestStatus === 'pending'}}" bindtap="onRefundReject">驳回退款</button>
+    <button class="btn danger" wx:if="{{order.status === 'paid'}}" bindtap="onRefundDirect">强制退款</button>
+  </view>
+</view>
+
+<view class="empty" wx:else>
+  <text>{{loadErr || '加载中…'}}</text>
+</view>

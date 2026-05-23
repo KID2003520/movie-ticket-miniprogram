@@ -1,7 +1,13 @@
 {
   "description": "电影购票小程序",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "backend" },
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": "plans" },
+      { "type": "folder", "value": "database" },
+      { "type": "suffix", "value": ".md" }
+    ],
     "include": []
   },
   "miniprogramRoot": "./",
@@ -14,7 +20,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": true,
+    "nodeModules": false,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -35,13 +41,7 @@
     "bundle": false,
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
-    "packNpmManually": true,
-    "packNpmRelationList": [
-      {
-        "packageJsonPath": "./package.json",
-        "miniprogramNpmDistDir": "./"
-      }
-    ],
+    "packNpmManually": false,
     "minifyWXSS": true,
     "showES6CompileOption": false,
     "minifyWXML": true,
@@ -54,15 +54,13 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.25.0",
-  "appid": "wxa87dc82da9eca075",
+  "libVersion": "3.14.3",
+  "appid": "wxbce1980e66cee607",
   "projectname": "movie-ticket-miniprogram",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
-  "cloudbaseRoot": "cloudbaserc.json/",
   "simulatorPluginLibVersion": {}
 }

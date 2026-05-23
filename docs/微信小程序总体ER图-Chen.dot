@@ -1,0 +1,169 @@
+// 在线电影购票微信小程序 — 总体 ER 图（已校正，Chen 记法）
+// 场次 hallName/hallType 为冗余；与影厅无 hallId 外键
+// 渲染：https://dreampuf.github.io/GraphvizOnline/
+
+graph ER {
+  rankdir=TB;
+  splines=ortho;
+  nodesep=0.3;
+  ranksep=0.4;
+  node [fontname="Microsoft YaHei", fontsize=10];
+  edge [fontname="Microsoft YaHei", fontsize=9];
+
+  E_USER [shape=box, label="用户"];
+  A_UID [shape=ellipse, label="用户编号"];
+  A_PHONE [shape=ellipse, label="手机号"];
+  A_NICK [shape=ellipse, label="昵称"];
+  A_PWD [shape=ellipse, label="密码"];
+  A_AVATAR [shape=ellipse, label="头像"];
+  A_ADMIN [shape=ellipse, label="是否管理员"];
+  A_ACST [shape=ellipse, label="账号状态"];
+  E_USER -- A_UID -- A_PHONE -- A_NICK;
+  E_USER -- A_PWD -- A_AVATAR -- A_ADMIN -- A_ACST;
+
+  E_MOVIE [shape=box, label="影片"];
+  A_MID [shape=ellipse, label="影片编号"];
+  A_TITLE [shape=ellipse, label="片名"];
+  A_POSTER [shape=ellipse, label="海报"];
+  A_RATING [shape=ellipse, label="评分"];
+  A_MSTATUS [shape=ellipse, label="上映状态"];
+  E_MOVIE -- A_MID -- A_TITLE -- A_POSTER -- A_RATING -- A_MSTATUS;
+
+  E_CINEMA [shape=box, label="影院"];
+  A_CID [shape=ellipse, label="影院编号"];
+  A_CNAME [shape=ellipse, label="影院名称"];
+  A_CITY [shape=ellipse, label="城市"];
+  A_ADDR [shape=ellipse, label="地址"];
+  E_CINEMA -- A_CID -- A_CNAME -- A_CITY -- A_ADDR;
+
+  E_HALL [shape=box, label="影厅\n(配置表)"];
+  A_HID [shape=ellipse, label="影厅编号"];
+  A_HNAME [shape=ellipse, label="影厅名称"];
+  A_HTYPE [shape=ellipse, label="影厅类型"];
+  A_ROWS [shape=ellipse, label="seatRows"];
+  A_COLS [shape=ellipse, label="seatCols"];
+  E_HALL -- A_HID -- A_HNAME -- A_HTYPE -- A_ROWS -- A_COLS;
+
+  E_SCHED [shape=box, label="场次"];
+  A_SID [shape=ellipse, label="场次编号"];
+  A_DATE [shape=ellipse, label="放映日期"];
+  A_STIME [shape=ellipse, label="开始时间"];
+  A_SPRICE [shape=ellipse, label="场次票价"];
+  A_AVAIL [shape=ellipse, label="余票数"];
+  A_HN [shape=ellipse, label="hallName\n(冗余)"];
+  A_HT [shape=ellipse, label="hallType\n(冗余)"];
+  E_SCHED -- A_SID -- A_DATE -- A_STIME -- A_SPRICE -- A_AVAIL -- A_HN -- A_HT;
+
+  E_SEAT [shape=box, label="座位"];
+  A_SEATID [shape=ellipse, label="座位编号"];
+  A_ROW [shape=ellipse, label="rowNum"];
+  A_COL [shape=ellipse, label="colNum"];
+  A_SSTAT [shape=ellipse, label="状态"];
+  E_SEAT -- A_SEATID -- A_ROW -- A_COL -- A_SSTAT;
+
+  E_ORDER [shape=box, label="订单"];
+  A_OID [shape=ellipse, label="订单编号"];
+  A_ONO [shape=ellipse, label="订单号"];
+  A_TOTAL [shape=ellipse, label="实付金额"];
+  A_OSTAT [shape=ellipse, label="订单状态"];
+  A_SCNT [shape=ellipse, label="seatCount"];
+  A_SJSON [shape=ellipse, label="seatsJson"];
+  A_PAYT [shape=ellipse, label="payTime"];
+  E_ORDER -- A_OID -- A_ONO -- A_TOTAL -- A_OSTAT -- A_SCNT -- A_SJSON -- A_PAYT;
+
+  E_FAV [shape=box, label="收藏"];
+  A_FID [shape=ellipse, label="收藏编号"];
+  A_FOID [shape=ellipse, label="_openid"];
+  A_FMID [shape=ellipse, label="movieId"];
+  A_FTIME [shape=ellipse, label="收藏时间"];
+  E_FAV -- A_FID -- A_FOID -- A_FMID -- A_FTIME;
+
+  E_CMT [shape=box, label="影评"];
+  A_CMID [shape=ellipse, label="评论编号"];
+  A_COID [shape=ellipse, label="_openid"];
+  A_CMID2 [shape=ellipse, label="movieId"];
+  A_CRAT [shape=ellipse, label="评分"];
+  A_CTEXT [shape=ellipse, label="内容"];
+  E_CMT -- A_CMID -- A_COID -- A_CMID2 -- A_CRAT -- A_CTEXT;
+
+  E_CTPL [shape=box, label="优惠券模板"];
+  A_TID [shape=ellipse, label="模板编号"];
+  A_TTITLE [shape=ellipse, label="券名称"];
+  A_AMOUNT [shape=ellipse, label="面额"];
+  A_MINAMT [shape=ellipse, label="门槛"];
+  A_SELL [shape=ellipse, label="sellPrice"];
+  A_STOCK [shape=ellipse, label="stock"];
+  E_CTPL -- A_TID -- A_TTITLE -- A_AMOUNT -- A_MINAMT -- A_SELL -- A_STOCK;
+
+  E_UCPN [shape=box, label="用户优惠券"];
+  A_UCID [shape=ellipse, label="用户券编号"];
+  A_UOID [shape=ellipse, label="_openid"];
+  A_UTID [shape=ellipse, label="templateId"];
+  A_USTAT [shape=ellipse, label="status"];
+  A_EXPIRE [shape=ellipse, label="expireTime"];
+  E_UCPN -- A_UCID -- A_UOID -- A_UTID -- A_USTAT -- A_EXPIRE;
+
+  E_CPO [shape=box, label="购券订单"];
+  A_CPOID [shape=ellipse, label="购券单编号"];
+  A_CPOQ [shape=ellipse, label="qty"];
+  A_CPOTOT [shape=ellipse, label="totalPrice"];
+  A_CPOST [shape=ellipse, label="status"];
+  E_CPO -- A_CPOID -- A_CPOQ -- A_CPOTOT -- A_CPOST;
+
+  E_PTS [shape=box, label="积分余额"];
+  A_PTSB [shape=ellipse, label="balance"];
+  E_PTS -- A_PTSB;
+
+  E_PTL [shape=box, label="积分流水"];
+  A_PTD [shape=ellipse, label="delta"];
+  E_PTL -- A_PTD;
+
+  E_REF [shape=box, label="退款申请"];
+  A_RFO [shape=ellipse, label="orderId"];
+  A_RFST [shape=ellipse, label="status"];
+  E_REF -- A_RFO -- A_RFST;
+
+  R_ORDER [shape=diamond, label="下单"];
+  R_SCHED_MOV [shape=diamond, label="排片"];
+  R_SCHED_CIN [shape=diamond, label="放映"];
+  R_HALL [shape=diamond, label="下设"];
+  R_GEN_SEAT [shape=diamond, label="生成"];
+  R_BOOK [shape=diamond, label="预订"];
+  R_SOLD [shape=diamond, label="售出"];
+  R_FAV_U [shape=diamond, label="收藏"];
+  R_FAV_M [shape=diamond, label="被收藏"];
+  R_CMT_U [shape=diamond, label="发表"];
+  R_CMT_M [shape=diamond, label="被评"];
+  R_HOLD [shape=diamond, label="持有"];
+  R_ISSUE [shape=diamond, label="发放"];
+  R_BUYCPN [shape=diamond, label="购券"];
+  R_SELL [shape=diamond, label="售卖"];
+  R_USECPN [shape=diamond, label="使用"];
+  R_PTS [shape=diamond, label="拥有"];
+  R_PTL [shape=diamond, label="产生"];
+  R_REF [shape=diamond, label="申请退款"];
+
+  E_USER -- R_ORDER [label="1"]; R_ORDER -- E_ORDER [label="n"];
+  E_MOVIE -- R_SCHED_MOV [label="1"]; R_SCHED_MOV -- E_SCHED [label="n"];
+  E_CINEMA -- R_SCHED_CIN [label="1"]; R_SCHED_CIN -- E_SCHED [label="n"];
+  E_CINEMA -- R_HALL [label="1"]; R_HALL -- E_HALL [label="n"];
+  E_SCHED -- R_GEN_SEAT [label="1"]; R_GEN_SEAT -- E_SEAT [label="n"];
+  E_SCHED -- R_BOOK [label="1"]; R_BOOK -- E_ORDER [label="n"];
+  E_ORDER -- R_SOLD [label="1"]; R_SOLD -- E_SEAT [label="n"];
+
+  E_USER -- R_FAV_U [label="1"]; R_FAV_U -- E_FAV [label="n"];
+  E_MOVIE -- R_FAV_M [label="1"]; R_FAV_M -- E_FAV [label="n"];
+  E_USER -- R_CMT_U [label="1"]; R_CMT_U -- E_CMT [label="n"];
+  E_MOVIE -- R_CMT_M [label="1"]; R_CMT_M -- E_CMT [label="n"];
+
+  E_USER -- R_HOLD [label="1"]; R_HOLD -- E_UCPN [label="n"];
+  E_CTPL -- R_ISSUE [label="1"]; R_ISSUE -- E_UCPN [label="n"];
+  E_USER -- R_BUYCPN [label="1"]; R_BUYCPN -- E_CPO [label="n"];
+  E_CTPL -- R_SELL [label="1"]; R_SELL -- E_CPO [label="n"];
+  E_ORDER -- R_USECPN [label="0..1"]; R_USECPN -- E_UCPN [label="1"];
+
+  E_USER -- R_PTS [label="1"]; R_PTS -- E_PTS [label="1"];
+  E_USER -- R_PTL [label="1"]; R_PTL -- E_PTL [label="n"];
+  E_USER -- R_REF [label="1"]; R_REF -- E_REF [label="n"];
+  E_ORDER -- R_REF [label="1"]; R_REF -- E_REF [label="n"];
+}

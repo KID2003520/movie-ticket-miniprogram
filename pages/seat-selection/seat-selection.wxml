@@ -1,60 +1,80 @@
-<view class="container">
+<view class="container seat-page">
   <view wx:if="{{schedule}}" class="seat-wrapper">
-    <view class="movie-info">
+    <view class="session-card">
       <image src="{{schedule.moviePoster}}" mode="aspectFill" class="movie-poster"></image>
-      <view class="movie-detail">
+      <view class="session-main">
         <text class="movie-title">{{schedule.movieTitle}}</text>
-        <text class="movie-meta">{{schedule.date}} {{schedule.startTime}}</text>
-        <text class="movie-meta">{{schedule.hallName}}</text>
+        <text class="movie-meta">{{schedule.date}} {{schedule.startTime}} {{schedule.hallName}}</text>
       </view>
     </view>
 
-    <view class="screen-wrapper">
-      <view class="screen">银幕</view>
-      <view class="screen-shadow"></view>
+    <view class="screen-wrap">
+      <view class="screen">银幕中央</view>
     </view>
 
-    <view class="seat-container">
-      <view class="seat-row" wx:for="{{seats}}" wx:key="index" wx:for-index="rowIndex">
-        <view class="row-label">{{rowIndex + 1}}</view>
-        <view class="seat-col" wx:for="{{item}}" wx:key="col" bindtap="onSeatTap" data-row="{{item.row}}" data-col="{{item.col}}" data-status="{{item.status}}">
-          <view class="seat {{item.status}}"></view>
+    <scroll-view scroll-x class="seat-scroll" show-scrollbar="{{false}}">
+      <view class="seat-container">
+        <view class="seat-row" wx:for="{{seats}}" wx:key="index" wx:for-index="rowIndex">
+          <view class="row-label">{{rowIndex + 1}}</view>
+          <view class="seat-col" wx:for="{{item}}" wx:key="col" bindtap="onSeatTap" data-row="{{item.row}}" data-col="{{item.col}}" data-status="{{item.status}}">
+            <view class="seat {{item.status}}"></view>
+          </view>
         </view>
       </view>
+    </scroll-view>
+
+    <view class="legend">
+      <view class="legend-item"><view class="legend-seat available"></view><text>可选</text></view>
+      <view class="legend-item"><view class="legend-seat selected"></view><text>已选</text></view>
+      <view class="legend-item"><view class="legend-seat sold"></view><text>已售</text></view>
+      <view class="legend-item"><view class="legend-seat locked"></view><text>锁定</text></view>
     </view>
 
-    <view class="seat-legend">
-      <view class="legend-item">
-        <view class="legend-seat available"></view>
-        <text>可选</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-seat selected"></view>
-        <text>已选</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-seat sold"></view>
-        <text>已售</text>
-      </view>
-    </view>
-
-    <view class="selected-info">
-      <text class="selected-label">已选座位:</text>
-      <view class="selected-seats">
+    <view class="selected-bar">
+      <text class="selected-title">已选</text>
+      <view class="selected-list">
         <text class="selected-seat" wx:for="{{selectedSeats}}" wx:key="index">{{item.row}}排{{item.col}}座</text>
       </view>
     </view>
 
+    <view class="selected-coupon" wx:if="{{selectedCoupon}}">
+      <view class="coupon-tag">
+        <text class="coupon-name">{{selectedCoupon.title}}</text>
+        <text class="coupon-discount">-¥{{selectedCoupon.amount}}</text>
+        <text class="coupon-remove" bindtap="onRemoveCoupon">移除</text>
+      </view>
+    </view>
+
     <view class="bottom-bar">
-      <view class="price-info">
-        <text class="price-label">总计</text>
-        <text class="price-value">{{totalPrice}}元</text>
+      <view class="left-area">
+        <text class="total">¥{{totalPrice}}</text>
+        <view class="coupon-btn" bindtap="onCouponTap">{{selectedCoupon ? '已用优惠券' : '优惠券'}}</view>
       </view>
       <view class="submit-btn {{selectedSeats.length === 0 ? 'disabled' : ''}}" bindtap="onSubmit">确认选座</view>
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
+  <!-- 优惠券选择弹窗 -->
+  <view class="coupon-picker-mask" wx:if="{{showCouponPicker}}" bindtap="onCloseCouponPicker">
+    <view class="coupon-picker" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择优惠券</text>
+        <text class="picker-close" bindtap="onCloseCouponPicker">✕</text>
+      </view>
+      <scroll-view scroll-y class="picker-content">
+        <view class="coupon-option" wx:for="{{availableCoupons}}" wx:key="_id" bindtap="onSelectCoupon" data-id="{{item._id}}">
+          <view class="option-left">
+            <text class="option-amount">¥{{item.amount}}</text>
+            <text class="option-condition">{{item.minAmount > 0 ? '满' + item.minAmount + '元可用' : '无门槛'}}</text>
+          </view>
+          <view class="option-right">
+            <text class="option-title">{{item.title}}</text>
+            <text class="option-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
   </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
 </view>

@@ -1,83 +1,78 @@
-<view class="container">
-  <view class="header">
-    <view class="location">
-      <text class="location-icon">📍</text>
-      <text class="location-text">北京</text>
+<view class="container home-page tab-page-safe">
+  <view class="home-header">
+    <view class="home-city" bindtap="onLocationTap">
+      <text class="city-text">{{location}}</text>
+      <text class="city-arrow">▼</text>
     </view>
-    <view class="search-bar" bindtap="onSearchTap">
-      <text class="search-icon">🔍</text>
-      <text class="search-placeholder">搜索电影、影院</text>
+    <view class="home-search" bindtap="onSearchTap">
+      <text class="search-placeholder">搜电影、影院、影人</text>
     </view>
   </view>
 
-  <swiper class="banner" indicator-dots autoplay circular interval="3000" duration="500">
+  <swiper class="home-banner" indicator-dots indicator-color="rgba(255, 255, 255, 0.4)" indicator-active-color="#ffffff" autoplay circular interval="3000" duration="450">
     <swiper-item wx:for="{{bannerList}}" wx:key="id" bindtap="onBannerTap" data-id="{{item.id}}">
       <image src="{{item.image}}" mode="aspectFill" class="banner-image"></image>
+      <view class="banner-mask"></view>
+      <view class="banner-title">{{item.title}}</view>
     </swiper-item>
   </swiper>
 
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">🔥 热门电影</text>
-      <text class="section-more" bindtap="onMoreTap">更多 ></text>
+  <view class="module-card">
+    <view class="module-head">
+      <text class="module-title">正在热映</text>
+      <view class="module-more" bindtap="onMoreTap">全部 ></view>
     </view>
-    <scroll-view scroll-x class="movie-scroll">
-      <view class="movie-list">
-        <view class="movie-item" wx:for="{{hotMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
-          <image src="{{item.poster}}" mode="aspectFill" class="movie-poster"></image>
-          <view class="movie-info">
-            <text class="movie-title">{{item.title}}</text>
-            <view class="movie-rating">
-              <text class="rating-value">{{item.rating}}</text>
-              <text class="rating-label">分</text>
-            </view>
-            <text class="movie-price">{{item.price}}元起</text>
-          </view>
+    <scroll-view scroll-x class="h-scroll" show-scrollbar="{{false}}">
+      <view class="h-list">
+        <view class="mini-movie" wx:for="{{showingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+          <image src="{{item.poster}}" mode="aspectFill" class="mini-poster" binderror="onMiniPosterError" data-id="{{item._id}}" data-list="showingMovies"></image>
+          <text class="mini-title">{{item.title}}</text>
+          <text class="mini-score">{{item.rating}} 分</text>
+          <view class="mini-buy">购票</view>
         </view>
       </view>
     </scroll-view>
   </view>
 
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">🎬 正在热映</text>
-      <text class="section-more" bindtap="onMoreTap">更多 ></text>
+  <view class="module-card">
+    <view class="module-head">
+      <text class="module-title">即将上映</text>
+      <view class="module-more" bindtap="onMoreTap">全部 ></view>
     </view>
-    <view class="movie-grid">
-      <view class="movie-card" wx:for="{{showingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
-        <image src="{{item.poster}}" mode="aspectFill" class="card-poster"></image>
-        <view class="card-info">
-          <text class="card-title">{{item.title}}</text>
-          <view class="card-meta">
-            <text class="card-rating">{{item.rating}}分</text>
-            <text class="card-genre">{{item.genre}}</text>
-          </view>
-          <text class="card-price">{{item.price}}元起</text>
+    <scroll-view scroll-x class="h-scroll" show-scrollbar="{{false}}">
+      <view class="h-list">
+        <view class="mini-movie" wx:for="{{comingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+          <image src="{{item.poster}}" mode="aspectFill" class="mini-poster" binderror="onMiniPosterError" data-id="{{item._id}}" data-list="comingMovies"></image>
+          <text class="mini-title">{{item.title}}</text>
+          <text class="mini-sub">{{item.releaseDate || '敬请期待'}}</text>
+          <view class="mini-wish">想看</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="module-card">
+    <view class="module-head">
+      <text class="module-title">热门推荐</text>
+    </view>
+    <view class="hot-list">
+      <view class="hot-item" wx:for="{{hotMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+        <image src="{{item.poster}}" mode="aspectFill" class="hot-poster" binderror="onMiniPosterError" data-id="{{item._id}}" data-list="hotMovies"></image>
+        <view class="hot-main">
+          <text class="hot-title">{{item.title}}</text>
+          <text class="hot-meta">{{item.genre}} | {{item.duration || '--'}}分钟</text>
+          <text class="hot-score">{{item.rating}} 分</text>
+        </view>
+        <view class="hot-right">
+          <text class="hot-price"><text class="price-symbol">¥</text>{{item.price}}起</text>
+          <view class="hot-btn">购票</view>
         </view>
       </view>
     </view>
   </view>
 
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">🎯 即将上映</text>
-      <text class="section-more" bindtap="onMoreTap">更多 ></text>
-    </view>
-    <view class="movie-grid">
-      <view class="movie-card" wx:for="{{comingMovies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
-        <image src="{{item.poster}}" mode="aspectFill" class="card-poster"></image>
-        <view class="card-info">
-          <text class="card-title">{{item.title}}</text>
-          <view class="card-meta">
-            <text class="card-date">{{item.releaseDate}}</text>
-          </view>
-          <view class="coming-tag">即将上映</view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
   </view>
 </view>

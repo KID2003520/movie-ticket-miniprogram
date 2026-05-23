@@ -1,131 +1,172 @@
-.container {
-  padding-bottom: 20rpx;
+.cinema-detail-page {
+  padding: 16rpx 24rpx 20rpx;
+  box-sizing: border-box;
 }
 
-.cinema-header {
+.cinema-card {
   background-color: #fff;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  padding: 22rpx;
 }
 
 .cinema-name {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
   display: block;
-  margin-bottom: 16rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #121212;
 }
 
 .cinema-address {
-  font-size: 28rpx;
-  color: #666;
   display: block;
-  margin-bottom: 16rpx;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #8a8a8a;
 }
 
 .cinema-tags {
+  margin-top: 12rpx;
   display: flex;
   flex-wrap: wrap;
-  gap: 10rpx;
-  margin-bottom: 16rpx;
+  gap: 8rpx;
 }
 
 .tag {
-  font-size: 22rpx;
-  color: #FF6B6B;
-  border: 1rpx solid #FF6B6B;
-  padding: 4rpx 12rpx;
+  height: 30rpx;
+  line-height: 30rpx;
+  padding: 0 8rpx;
   border-radius: 4rpx;
+  font-size: 20rpx;
+  color: #ff5f16;
+  border: 1rpx solid #ffd5c2;
 }
 
-.cinema-phone,
-.cinema-location {
+.cinema-actions {
+  margin-top: 16rpx;
   display: flex;
-  align-items: center;
-  font-size: 26rpx;
+  gap: 12rpx;
+}
+
+.action {
+  height: 44rpx;
+  line-height: 44rpx;
+  padding: 0 16rpx;
+  border-radius: 22rpx;
+  background-color: #f7f7f7;
+  font-size: 22rpx;
   color: #666;
-  margin-bottom: 8rpx;
 }
 
 .date-bar {
-  background-color: #fff;
-  padding: 20rpx 0;
-  margin-bottom: 20rpx;
-}
-
-.date-scroll {
-  white-space: nowrap;
+  margin-top: 14rpx;
 }
 
 .date-list {
   display: inline-flex;
-  padding: 0 20rpx;
+  gap: 10rpx;
 }
 
 .date-item {
+  width: 120rpx;
+  height: 84rpx;
+  border-radius: 12rpx;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16rpx 30rpx;
-  margin-right: 20rpx;
-  border-radius: 12rpx;
-  background-color: #f5f5f5;
+  justify-content: center;
 }
 
 .date-item.active {
-  background-color: #FF6B6B;
+  background-color: #ff5f16;
 }
 
 .date-text {
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #333;
-  margin-bottom: 8rpx;
-}
-
-.date-item.active .date-text {
-  color: #fff;
 }
 
 .week-text {
-  font-size: 24rpx;
+  margin-top: 4rpx;
+  font-size: 20rpx;
   color: #999;
 }
 
+.date-item.active .date-text,
 .date-item.active .week-text {
   color: #fff;
 }
 
 .schedule-list {
-  padding: 0 20rpx;
+  margin-top: 14rpx;
+}
+
+.movie-bar {
+  margin-top: 14rpx;
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 14rpx 10rpx;
+}
+
+.movie-list {
+  display: inline-flex;
+  gap: 12rpx;
+}
+
+.movie-item {
+  width: 130rpx;
+  padding: 8rpx;
+  border-radius: 10rpx;
+  border: 1rpx solid transparent;
+}
+
+.movie-item.active {
+  border-color: #ff5f16;
+  background: #fff7f2;
+}
+
+.movie-poster {
+  width: 114rpx;
+  height: 150rpx;
+  border-radius: 8rpx;
+  display: block;
+}
+
+.movie-title {
+  margin-top: 8rpx;
+  width: 114rpx;
+  display: block;
+  font-size: 21rpx;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .schedule-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+  border-radius: 14rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
 }
 
 .schedule-time {
-  display: flex;
-  flex-direction: column;
-  margin-right: 20rpx;
+  width: 148rpx;
 }
 
 .start-time {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #121212;
 }
 
 .end-time {
-  font-size: 24rpx;
+  display: block;
+  margin-top: 6rpx;
+  font-size: 20rpx;
   color: #999;
-  margin-top: 8rpx;
 }
 
 .schedule-info {
@@ -133,40 +174,60 @@
 }
 
 .hall-name {
-  font-size: 28rpx;
-  color: #333;
   display: block;
-  margin-bottom: 8rpx;
+  font-size: 26rpx;
+  color: #333;
 }
 
 .hall-type {
-  font-size: 24rpx;
+  display: block;
+  margin-top: 6rpx;
+  font-size: 21rpx;
   color: #999;
 }
 
 .schedule-price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  text-align: right;
 }
 
 .price {
-  font-size: 32rpx;
-  color: #FF6B6B;
-  font-weight: bold;
-  margin-bottom: 10rpx;
+  display: block;
+  font-size: 30rpx;
+  color: #ff5f16;
+  font-weight: 700;
+}
+
+.symbol {
+  font-size: 22rpx;
 }
 
 .buy-btn {
-  background-color: #FF6B6B;
+  margin-top: 10rpx;
+  min-width: 100rpx;
+  height: 46rpx;
+  border-radius: 23rpx;
+  line-height: 46rpx;
+  text-align: center;
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
-  font-size: 24rpx;
-  padding: 12rpx 24rpx;
-  border-radius: 30rpx;
+  font-size: 22rpx;
 }
 
 .loading {
   text-align: center;
-  padding: 40rpx;
+  padding: 60rpx;
   color: #999;
+  font-size: 24rpx;
+}
+
+.empty-wrap {
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 28rpx;
+  text-align: center;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 24rpx;
 }

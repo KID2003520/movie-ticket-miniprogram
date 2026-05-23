@@ -1,0 +1,82 @@
+﻿<view class="container">
+  <view class="shop-wrap">
+    <view class="shop-title">优惠券商城</view>
+    <view class="shop-list">
+      <view class="shop-item" wx:for="{{shopItems}}" wx:key="_id">
+        <view class="shop-main">
+          <text class="shop-name">{{item.title}}</text>
+          <text class="shop-desc">面额 ¥{{item.amount}} · {{item.minAmount > 0 ? '满' + item.minAmount + '可用' : '无门槛'}}</text>
+          <text class="shop-desc">有效期 {{item.validDays}} 天</text>
+        </view>
+        <view class="shop-side">
+          <text class="shop-price">¥{{item.sellPrice}}</text>
+          <view class="buy-btn {{item.stock - item.soldCount <= 0 ? 'buy-btn-disabled' : ''}}" bindtap="onBuyCoupon" data-id="{{item._id}}">{{buyingTemplateId===item._id ? '购买中' : (item.stock - item.soldCount <= 0 ? '已售罄' : '购买')}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{0}}">
+      <text>可用</text>
+      <view class="tab-line" wx:if="{{currentTab === 0}}"></view>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{1}}">
+      <text>已使用</text>
+      <view class="tab-line" wx:if="{{currentTab === 1}}"></view>
+    </view>
+    <view class="tab-item {{currentTab === 2 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{2}}">
+      <text>已过期</text>
+      <view class="tab-line" wx:if="{{currentTab === 2}}"></view>
+    </view>
+  </view>
+
+  <view class="coupon-list">
+    <view class="coupon-item {{item.isExpired || item.isUsed ? 'disabled' : ''}}"
+          wx:for="{{coupons}}"
+          wx:key="_id"
+          wx:if="{{(currentTab === 0 && !item.isExpired && !item.isUsed) ||
+                  (currentTab === 1 && item.isUsed) ||
+                  (currentTab === 2 && item.isExpired)}}">
+      <view class="coupon-left">
+        <view class="coupon-amount">
+          <text class="amount-symbol">¥</text>
+          <text class="amount-value">{{item.amount}}</text>
+        </view>
+        <text class="coupon-condition">{{item.minAmount > 0 ? '满' + item.minAmount + '元可用' : '无门槛'}}</text>
+      </view>
+
+      <view class="coupon-right">
+        <view class="coupon-info">
+          <text class="coupon-title">{{item.title}}</text>
+          <text class="coupon-desc">{{item.description}}</text>
+          <text class="coupon-time">{{item.isExpired ? '已过期' : item.isUsed ? '已使用' : item.validityText}}</text>
+        </view>
+
+        <view class="coupon-action" wx:if="{{!item.isExpired && !item.isUsed}}" bindtap="onUseCoupon" data-id="{{item._id}}">
+          <text>去选座</text>
+        </view>
+
+        <view class="coupon-status" wx:if="{{item.isExpired || item.isUsed}}">
+          <text>{{item.isExpired ? '已过期' : '已使用'}}</text>
+        </view>
+      </view>
+
+      <view class="coupon-divider">
+        <view class="circle left"></view>
+        <view class="dashed-line"></view>
+        <view class="circle right"></view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && coupons.length === 0}}" class="empty-state">
+    <text class="empty-icon">🎫</text>
+    <text class="empty-text">暂无优惠券，先去上方商城购买</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

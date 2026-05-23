@@ -1,107 +1,123 @@
-.container {
-  padding-bottom: 40rpx;
+.user-page {
+  padding: 20rpx 24rpx 30rpx;
+  box-sizing: border-box;
 }
 
-.user-header {
-  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
-  padding: 60rpx 30rpx;
-  margin-bottom: 20rpx;
-}
-
-.user-info {
+.profile-card {
+  border-radius: 18rpx;
+  padding: 26rpx;
+  background: linear-gradient(135deg, #ff7a00 0%, #ff4d22 100%);
   display: flex;
   align-items: center;
 }
 
 .avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  border: 4rpx solid #fff;
-  background-color: #fff;
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 54rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.9);
+  background-color: #ffffff;
 }
 
-.info {
+.profile-main {
   flex: 1;
-  margin-left: 30rpx;
+  margin-left: 20rpx;
+  min-width: 0;
 }
 
 .nickname {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #fff;
   display: block;
-  margin-bottom: 10rpx;
+  color: #ffffff;
+  font-size: 34rpx;
+  font-weight: 700;
 }
 
 .desc {
-  font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.order-section {
-  background-color: #fff;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30rpx;
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.section-more {
-  display: flex;
-  align-items: center;
-  font-size: 26rpx;
-  color: #999;
+  display: block;
+  margin-top: 8rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 24rpx;
 }
 
 .arrow {
-  margin-left: 8rpx;
   color: #999;
+  font-size: 24rpx;
 }
 
-.order-tabs {
-  display: flex;
-  justify-content: space-around;
+.profile-card .arrow {
+  color: rgba(255, 255, 255, 0.95);
 }
 
-.order-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.logout-wrap {
+  margin-top: 14rpx;
 }
 
-.tab-icon {
-  font-size: 40rpx;
-  margin-bottom: 10rpx;
-}
-
-.order-tab text:last-child {
+.logout-btn {
+  height: 72rpx;
+  border-radius: 36rpx;
+  border: 2rpx solid #ffd5c2;
+  color: #ff5f16;
+  background-color: #fff8f4;
+  text-align: center;
+  line-height: 72rpx;
   font-size: 26rpx;
-  color: #666;
 }
 
-.menu-section {
-  background-color: #fff;
-  padding: 0 30rpx;
+.panel {
+  margin-top: 18rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
 }
 
-.menu-item {
+.panel-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
+  padding: 12rpx 0 18rpx;
+}
+
+.panel-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #121212;
+}
+
+.panel-more {
+  font-size: 23rpx;
+  color: #999;
+}
+
+.order-grid {
+  display: flex;
+  padding-bottom: 8rpx;
+}
+
+.order-cell {
+  flex: 1;
+  text-align: center;
+}
+
+.cell-name {
+  display: block;
+  color: #666;
+  font-size: 24rpx;
+}
+
+.cell-num {
+  display: block;
+  margin-top: 10rpx;
+  color: #ff5f16;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.menu-item {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #efefef;
 }
 
 .menu-item:last-child {
@@ -109,43 +125,49 @@
 }
 
 .menu-title {
-  font-size: 30rpx;
-  color: #333;
+  font-size: 28rpx;
+  color: #121212;
 }
 
-.admin-section {
+.menu-right {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin: 20rpx;
-  padding: 30rpx;
+}
+
+.menu-count {
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+  border-radius: 18rpx;
+  background-color: #ff5f16;
+  color: #ffffff;
+  font-size: 22rpx;
+  line-height: 36rpx;
+  text-align: center;
+}
+
+.menu-right .arrow {
+  margin-left: 12rpx;
+}
+
+.admin-entry {
+  margin-top: 18rpx;
   border-radius: 16rpx;
-  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.3);
-}
-
-.admin-icon {
-  font-size: 48rpx;
-  margin-right: 20rpx;
-}
-
-.admin-content {
-  flex: 1;
+  background-color: #ffffff;
+  padding: 22rpx 20rpx;
 }
 
 .admin-title {
   display: block;
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #fff;
-  margin-bottom: 8rpx;
+  color: #121212;
+  font-size: 28rpx;
+  font-weight: 700;
 }
 
 .admin-desc {
   display: block;
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.admin-section .arrow {
-  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8rpx;
+  color: #8a8a8a;
+  font-size: 22rpx;
 }

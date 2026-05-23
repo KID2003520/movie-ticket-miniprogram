@@ -1,0 +1,59 @@
+/* 淘票票风格：白底、顶部分割线、选中橙红 #ff5533、未选 #666 */
+.tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: #ffffff;
+  box-shadow: 0 -1rpx 0 rgba(0, 0, 0, 0.06), 0 -8rpx 24rpx rgba(0, 0, 0, 0.04);
+}
+
+.tab-bar__hairline {
+  height: 1rpx;
+  background: rgba(0, 0, 0, 0.08);
+  transform: scaleY(0.5);
+  transform-origin: 0 0;
+}
+
+.tab-bar__inner {
+  display: flex;
+  align-items: stretch;
+  height: 98rpx;
+  padding: 8rpx 0 4rpx;
+  box-sizing: border-box;
+}
+
+.tab-bar__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.tab-bar__icon {
+  width: 48rpx;
+  height: 48rpx;
+  display: block;
+}
+
+.tab-bar__label {
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  line-height: 28rpx;
+  color: #666666;
+  font-weight: 400;
+}
+
+.tab-bar__item--active .tab-bar__label {
+  color: #ff5533;
+  font-weight: 600;
+}
+
+.tab-bar__safe {
+  height: constant(safe-area-inset-bottom);
+  height: env(safe-area-inset-bottom);
+  background: #ffffff;
+}

@@ -1,0 +1,196 @@
+%% 在线电影购票小程序 — 总体 ER 图（MySQL 逻辑模型）
+%% 与 backend/lib/extraApi.js、server.js 实际表结构一致
+%% 渲染：VS Code Mermaid / https://mermaid.live
+
+erDiagram
+    users["users 用户"] {
+        varchar _id PK
+        varchar phone
+        varchar nickName
+        varchar password
+        tinyint isAdmin
+        varchar account_status
+        datetime createTime
+    }
+
+    movies["movies 影片"] {
+        varchar _id PK
+        varchar title
+        varchar poster
+        decimal rating
+        varchar status
+        int price
+        date releaseDate
+        int hot
+    }
+
+    cinemas["cinemas 影院"] {
+        varchar _id PK
+        varchar name
+        varchar city
+        varchar address
+        decimal latitude
+        decimal longitude
+        int minPrice
+    }
+
+    cinema_halls["cinema_halls 影厅"] {
+        varchar _id PK
+        varchar cinemaId FK
+        varchar name
+        varchar hallType
+        int seatRows
+        int seatCols
+    }
+
+    schedules["schedules 场次"] {
+        varchar _id PK
+        varchar movieId FK
+        varchar cinemaId FK
+        varchar hallName
+        date date
+        varchar startTime
+        int price
+        int availableSeats
+    }
+
+    seats["seats 座位"] {
+        varchar _id PK
+        varchar scheduleId FK
+        int row
+        int col
+        varchar status
+        varchar orderId FK
+    }
+
+    orders["orders 订单"] {
+        varchar _id PK
+        varchar orderNo UK
+        varchar _openid FK
+        varchar scheduleId FK
+        text seatsJson
+        int seatCount
+        int totalPrice
+        varchar couponId FK
+        varchar status
+        datetime payTime
+    }
+
+    collections["collections 收藏"] {
+        varchar _id PK
+        varchar _openid FK
+        varchar movieId FK
+        datetime createTime
+    }
+
+    movie_comments["movie_comments 影评"] {
+        varchar _id PK
+        varchar _openid FK
+        varchar movieId FK
+        int rating
+        text content
+        datetime createTime
+    }
+
+    coupon_templates["coupon_templates 券模板"] {
+        varchar _id PK
+        varchar title
+        int amount
+        int minAmount
+        int sellPrice
+        int validDays
+        int stock
+    }
+
+    coupon_purchase_orders["coupon_purchase_orders 购券单"] {
+        varchar _id PK
+        varchar _openid FK
+        varchar templateId FK
+        int totalPrice
+        varchar status
+        datetime payTime
+    }
+
+    user_coupons["user_coupons 用户券"] {
+        varchar _id PK
+        varchar _openid FK
+        varchar templateId FK
+        varchar status
+        varchar lockOrderId FK
+        varchar usedOrderId FK
+        datetime expireTime
+    }
+
+    user_points_balance["user_points_balance 积分余额"] {
+        varchar _openid PK_FK
+        int balance
+        datetime updateTime
+    }
+
+    user_points_log["user_points_log 积分流水"] {
+        varchar _id PK
+        varchar _openid FK
+        int delta
+        varchar source_type
+        varchar source_id
+        datetime createTime
+    }
+
+    points_rule_config["points_rule_config 积分规则"] {
+        varchar rule_key PK
+        int rule_value
+    }
+
+    user_profile_audit["user_profile_audit 资料审计"] {
+        varchar _id PK
+        varchar _openid FK
+        varchar field_key
+        datetime createTime
+    }
+
+    admin_security_audit["admin_security_audit 管理审计"] {
+        varchar _id PK
+        varchar operator_openid FK
+        varchar category
+        varchar action
+        datetime createTime
+    }
+
+    order_refund_requests["order_refund_requests 退款申请"] {
+        varchar _id PK
+        varchar orderId FK
+        varchar requesterOpenid FK
+        varchar status
+        varchar reviewerOpenid FK
+        datetime createTime
+    }
+
+    %% ========== 购票主链路 ==========
+    users ||--o{ orders : "下单 _openid"
+    movies ||--o{ schedules : "排片"
+    cinemas ||--o{ schedules : "放映"
+    cinemas ||--o{ cinema_halls : "影厅"
+    schedules ||--o{ seats : "座位"
+    schedules ||--o{ orders : "场次"
+    orders ||--o{ seats : "占用 orderId"
+
+    %% ========== 优惠券 ==========
+    users ||--o{ user_coupons : "持有"
+    users ||--o{ coupon_purchase_orders : "购券"
+    coupon_templates ||--o{ user_coupons : "实例化"
+    coupon_templates ||--o{ coupon_purchase_orders : "售卖"
+    orders }o--o| user_coupons : "couponId 抵扣"
+
+    %% ========== 互动与会员 ==========
+    users ||--o{ collections : "收藏"
+    movies ||--o{ collections : "被收藏"
+    users ||--o{ movie_comments : "评论"
+    movies ||--o{ movie_comments : "被评"
+    users ||--|| user_points_balance : "积分余额"
+    users ||--o{ user_points_log : "积分流水"
+
+    %% ========== 运营与售后 ==========
+    users ||--o{ user_profile_audit : "资料变更"
+    users ||--o{ admin_security_audit : "管理员操作"
+    orders ||--o{ order_refund_requests : "退款申请"
+    users ||--o{ order_refund_requests : "申请人"

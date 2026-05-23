@@ -1,0 +1,141 @@
+.wrap {
+  height: 100vh;
+  padding: 20rpx;
+  box-sizing: border-box;
+  background: #f5f6f8;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.05);
+}
+
+.h {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.lab {
+  width: 260rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.inp {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 16rpx;
+  background: #f5f6fa;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin-bottom: 12rpx;
+}
+
+.inp.sm {
+  max-width: 200rpx;
+}
+
+.ta {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 16rpx;
+  box-sizing: border-box;
+  background: #f5f6fa;
+  border-radius: 10rpx;
+  font-size: 24rpx;
+  margin-bottom: 12rpx;
+}
+
+.btn {
+  margin-top: 8rpx;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
+  color: #fff;
+}
+
+.btn.ghost {
+  background: #fff;
+  color: #ff5f16;
+  border: 1rpx solid #ffb58d;
+}
+
+.btn.wide {
+  width: 100%;
+  margin-top: 16rpx;
+}
+
+.rules {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.rl {
+  display: block;
+  font-size: 22rpx;
+  color: #888;
+  line-height: 1.5;
+  margin-bottom: 8rpx;
+}
+
+.ck {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #666;
+  margin: 12rpx 0;
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12rpx 0;
+}
+
+.lab2 {
+  flex: 1;
+  font-size: 24rpx;
+  color: #666;
+  padding-right: 16rpx;
+}
+
+.log-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.log-t {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.log-m {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  margin-top: 6rpx;
+}
+
+.log-s {
+  display: block;
+  font-size: 22rpx;
+  color: #888;
+  margin-top: 4rpx;
+  word-break: break-all;
+}

@@ -1,0 +1,47 @@
+每张表是干什么的？
+购票核心
+表名	作用
+users
+用户账号（手机号登录、昵称、密码、是否管理员等）
+movies
+影片信息（片名、海报、票价、上映状态等）
+cinemas
+影院（名称、城市、地址、坐标）
+cinema_halls
+影厅配置（某影院下的厅名、类型、座位行列数）
+schedules
+场次（哪部片、哪家影院、哪天几点、票价、余票）
+seats
+座位（某场次下的行列、可选/已售、关联订单）
+orders
+购票订单（订单号、用户、场次、金额、状态、优惠券等）
+优惠券
+表名	作用
+coupon_templates
+优惠券模板（面额、门槛、售价、库存等，券商城）
+user_coupons
+用户手里的券（可用/锁定/已用、过期时间）
+coupon_purchase_orders
+用户购买优惠券的订单
+coupons
+多半是早期遗留表；当前代码主要用 coupon_templates + user_coupons，可不用或以后删掉
+互动与会员
+表名	作用
+collections
+用户收藏的电影
+movie_comments
+影片评论/评分
+user_points_balance
+用户积分余额
+user_points_log
+积分变动流水
+points_rule_config
+积分规则配置（如每消费多少送积分）
+售后与审计
+表名	作用
+order_refund_requests
+退款申请
+user_profile_audit
+用户资料修改记录
+admin_security_audit
+管理员操作安全日志

@@ -1,24 +1,60 @@
-<view class="container">
+<view class="container cinema-page tab-page-safe">
+  <view class="cinema-top">
+    <view class="loc-row">
+      <view class="city loc-entry" bindtap="onRefreshLocation">
+        <text class="loc-icon">📍</text>
+        <text class="loc-text">{{locationHint}}</text>
+      </view>
+    </view>
+    <input
+      class="search-input"
+      type="text"
+      placeholder="搜索影院名称或地址"
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+    />
+  </view>
+
+  <scroll-view scroll-x class="city-chips" enhanced show-scrollbar="{{false}}" wx:if="{{cityChips.length}}">
+    <view class="chip-wrap">
+      <view
+        class="chip {{filterCity === '' ? 'chip-active' : ''}}"
+        bindtap="onCityFilter"
+        data-city=""
+      >全部</view>
+      <view
+        wx:for="{{cityChips}}"
+        wx:key="*this"
+        class="chip {{filterCity === item ? 'chip-active' : ''}}"
+        bindtap="onCityFilter"
+        data-city="{{item}}"
+      >{{item}}</view>
+    </view>
+  </scroll-view>
+
   <view class="cinema-list">
     <view class="cinema-item" wx:for="{{cinemas}}" wx:key="_id" bindtap="onCinemaTap" data-id="{{item._id}}">
-      <view class="cinema-info">
+      <view class="cinema-main">
         <text class="cinema-name">{{item.name}}</text>
         <text class="cinema-address">{{item.address}}</text>
-        <view class="cinema-tags">
+        <view class="tag-list">
           <text class="tag" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag">{{tag}}</text>
         </view>
       </view>
-      <view class="cinema-right">
-        <text class="cinema-price">{{item.minPrice}}元起</text>
-        <text class="cinema-distance">{{item.distance}}km</text>
-        <view class="location-btn" catchtap="onLocationTap" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}" data-name="{{item.name}}" data-address="{{item.address}}">
-          <text class="location-text">导航</text>
-        </view>
+      <view class="cinema-side">
+        <text class="price"><text class="price-symbol">¥</text>{{item.minPrice}}起</text>
+        <text class="distance">{{item.distance != null ? item.distance + 'km' : '--'}}</text>
+        <view class="nav-btn" catchtap="onLocationTap" data-latitude="{{item.latitude}}" data-longitude="{{item.longitude}}" data-name="{{item.name}}" data-address="{{item.address}}">导航</view>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
+  <view wx:if="{{!loading && cinemas.length === 0}}" class="empty-wrap">
+    <text class="empty-text">暂无影院数据</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-text">加载中...</text>
   </view>
 </view>

@@ -1,55 +1,56 @@
-<view class="container">
-  <view class="user-header">
-    <view class="user-info" bindtap="onLogin">
-      <image src="{{isLogin ? userInfo.avatarUrl : 'https://picsum.photos/100/100?random=999'}}" class="avatar"></image>
-      <view class="info">
-        <text class="nickname">{{isLogin ? userInfo.nickName : '点击登录'}}</text>
-        <text class="desc">{{isLogin ? '欢迎回来' : '登录后享受更多服务'}}</text>
+<view class="container user-page tab-page-safe">
+  <view class="profile-card" bindtap="onProfileCardTap">
+    <image src="{{isLogin ? userInfo.avatarUrl : 'https://picsum.photos/100/100?random=999'}}" class="avatar"></image>
+    <view class="profile-main">
+      <text class="nickname">{{isLogin ? userInfo.nickName : '点击登录'}}</text>
+      <text class="desc">{{isLogin ? '淘票票会员' : '登录后可查看订单与优惠'}}</text>
+    </view>
+    <text class="arrow">></text>
+  </view>
+
+  <view class="logout-wrap" wx:if="{{isLogin}}">
+    <view class="logout-btn" bindtap="onLogout">退出登录</view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-head">
+      <text class="panel-title">我的订单</text>
+      <view class="panel-more" bindtap="onOrderTap">全部订单 ></view>
+    </view>
+    <view class="order-grid">
+      <view class="order-cell" bindtap="onOrderTap" data-status="pending">
+        <text class="cell-name">待付款</text>
+        <text class="cell-num">{{orderStats.pending}}</text>
+      </view>
+      <view class="order-cell" bindtap="onOrderTap" data-status="paid">
+        <text class="cell-name">待观影</text>
+        <text class="cell-num">{{orderStats.paid}}</text>
+      </view>
+      <view class="order-cell" bindtap="onOrderTap" data-status="cancelled">
+        <text class="cell-name">已取消</text>
+        <text class="cell-num">{{orderStats.cancelled}}</text>
+      </view>
+      <view class="order-cell" bindtap="onOrderTap" data-status="refunded">
+        <text class="cell-name">已退款</text>
+        <text class="cell-num">{{orderStats.refunded}}</text>
       </view>
     </view>
   </view>
 
-  <view class="order-section">
-    <view class="section-header">
-      <text class="section-title">我的订单</text>
-      <view class="section-more" bindtap="onOrderTap">
-        <text>全部订单</text>
+  <view class="panel">
+    <view class="menu-item" wx:for="{{menuList}}" wx:key="title" bindtap="onMenuTap" data-url="{{item.url}}" data-tip="{{item.tip}}">
+      <view class="menu-left">
+        <text class="menu-title">{{item.title}}</text>
+      </view>
+      <view class="menu-right">
+        <text class="menu-count" wx:if="{{item.title === '我的收藏' && collectionCount > 0}}">{{collectionCount}}</text>
         <text class="arrow">></text>
       </view>
     </view>
-    <view class="order-tabs">
-      <view class="order-tab" bindtap="onOrderTap">
-        <text class="tab-icon">⏱</text>
-        <text>待支付</text>
-      </view>
-      <view class="order-tab" bindtap="onOrderTap">
-        <text class="tab-icon">🎫</text>
-        <text>已支付</text>
-      </view>
-      <view class="order-tab" bindtap="onOrderTap">
-        <text class="tab-icon">✅</text>
-        <text>已完成</text>
-      </view>
-      <view class="order-tab" bindtap="onOrderTap">
-        <text class="tab-icon">💰</text>
-        <text>退款</text>
-      </view>
-    </view>
   </view>
 
-  <view class="menu-section">
-    <view class="menu-item" wx:for="{{menuList}}" wx:key="title" bindtap="onMenuTap" data-url="{{item.url}}">
-      <text class="menu-title">{{item.title}}</text>
-      <text class="arrow">></text>
-    </view>
-  </view>
-
-  <view class="admin-section" wx:if="{{isAdmin}}" bindtap="onAdminTap">
-    <view class="admin-icon">🛡️</view>
-    <view class="admin-content">
-      <text class="admin-title">管理员后台</text>
-      <text class="admin-desc">进入管理后台管理电影和用户</text>
-    </view>
-    <text class="arrow">></text>
+  <view class="admin-entry" wx:if="{{isAdmin}}" bindtap="onAdminTap">
+    <text class="admin-title">管理员后台</text>
+    <text class="admin-desc">电影管理、用户管理、订单管理</text>
   </view>
 </view>

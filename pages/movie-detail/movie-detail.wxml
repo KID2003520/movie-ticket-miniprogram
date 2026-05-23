@@ -1,80 +1,109 @@
-<view class="container">
+<view class="container detail-page">
   <view wx:if="{{movie}}" class="detail-wrapper">
-    <view class="movie-header">
-      <image src="{{movie.poster}}" mode="aspectFill" class="poster-bg"></image>
-      <view class="header-content">
-        <image src="{{movie.poster}}" mode="aspectFill" class="poster"></image>
-        <view class="info">
-          <text class="title">{{movie.title}}</text>
-          <view class="rating-box">
-            <text class="rating">{{movie.rating}}</text>
-            <text class="rating-text">分</text>
+    <view class="hero-card">
+      <image src="{{movieView.poster}}" mode="aspectFill" class="hero-bg"></image>
+      <view class="hero-mask"></view>
+      <view class="hero-main">
+        <image src="{{movieView.poster}}" mode="aspectFill" class="hero-poster"></image>
+        <view class="hero-info">
+          <text class="hero-title">{{movie.title}}</text>
+          <text class="hero-score">{{movieView.score}} 分</text>
+          <text class="hero-meta">{{movieView.genreText}} | {{movieView.duration}}</text>
+          <text class="hero-meta">{{movieView.releaseDate}} 上映</text>
+          <text wx:if="{{enriching}}" class="hero-meta">正在补全影片资料...</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tag-row">
+      <text class="tag-item" wx:for="{{movieView.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <view class="quick-actions">
+      <view class="action-item" bindtap="onCollect">{{isCollected ? '已收藏' : '收藏'}}</view>
+      <view class="action-item" bindtap="onShowCommentInput">写短评</view>
+    </view>
+
+    <view class="block">
+      <text class="block-title">剧情简介</text>
+      <text class="block-text">{{movieView.description}}</text>
+    </view>
+
+    <view class="block">
+      <text class="block-title">影片信息</text>
+      <view class="crew-row">
+        <text class="crew-label">状态</text>
+        <text class="crew-value">{{movieView.statusLabel}}</text>
+      </view>
+      <view class="crew-row">
+        <text class="crew-label">类型</text>
+        <text class="crew-value">{{movieView.genreText}}</text>
+      </view>
+      <view class="crew-row">
+        <text class="crew-label">时长</text>
+        <text class="crew-value">{{movieView.duration}}</text>
+      </view>
+      <view class="crew-row">
+        <text class="crew-label">上映</text>
+        <text class="crew-value">{{movieView.releaseDate}}</text>
+      </view>
+    </view>
+
+    <view class="block">
+      <text class="block-title">演职人员</text>
+      <view class="crew-row">
+        <text class="crew-label">导演</text>
+        <text class="crew-value">{{movieView.director}}</text>
+      </view>
+      <view class="crew-row">
+        <text class="crew-label">主演</text>
+        <text class="crew-value">{{movieView.actors}}</text>
+      </view>
+    </view>
+
+    <view class="block" wx:if="{{gallery.length > 0}}">
+      <view class="block-head">
+        <text class="block-title">电影图片</text>
+        <text class="block-more">点击可预览</text>
+      </view>
+      <scroll-view class="gallery-scroll" scroll-x enable-flex>
+        <image
+          wx:for="{{gallery}}"
+          wx:key="*this"
+          src="{{item}}"
+          mode="aspectFill"
+          class="gallery-img"
+          data-url="{{item}}"
+          bindtap="onPreviewImage"
+        ></image>
+      </scroll-view>
+    </view>
+
+    <view class="block">
+      <view class="block-head">
+        <text class="block-title">观众评论 ({{comments.length}})</text>
+        <text class="block-more" bindtap="onShowCommentInput">去评价</text>
+      </view>
+      <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+        <view class="comment-top">
+          <view class="comment-user">
+            <image class="comment-avatar" mode="aspectFill" src="{{item.avatarUrl || 'https://picsum.photos/80/80?random=700'}}"></image>
+            <text class="comment-name">{{item.nickName}}</text>
           </view>
-          <text class="meta">{{movie.genre}}</text>
-          <text class="meta">{{movie.duration}}分钟</text>
-          <text class="meta">{{movie.releaseDate}} 上映</text>
+          <text class="comment-time">{{item.createTime}}</text>
         </view>
+        <text class="comment-score">评分：{{item.rating || 5}} / 5</text>
+        <text class="comment-content">{{item.content}}</text>
       </view>
+      <view wx:if="{{comments.length===0}}" class="empty-comments">还没有评论，快来抢沙发</view>
     </view>
 
-    <view class="action-bar">
-      <view class="action-item" bindtap="onCollect">
-        <text class="action-icon">{{isCollected ? '★' : '☆'}}</text>
-        <text class="action-text">{{isCollected ? '已收藏' : '收藏'}}</text>
+    <view class="buy-bar">
+      <view class="buy-left">
+        <text class="buy-price"><text class="symbol">¥</text>{{movieView.priceText}}</text>
+        <text class="buy-tip">起售票价</text>
       </view>
-      <view class="action-item" bindtap="onShowCommentInput">
-        <text class="action-icon">💬</text>
-        <text class="action-text">评论</text>
-      </view>
-    </view>
-
-    <view class="section">
-      <view class="section-title">剧情简介</view>
-      <text class="description">{{movie.description}}</text>
-    </view>
-
-    <view class="section">
-      <view class="section-title">演职人员</view>
-      <view class="crew-info">
-        <view class="crew-item">
-          <text class="crew-label">导演</text>
-          <text class="crew-value">{{movie.director}}</text>
-        </view>
-        <view class="crew-item">
-          <text class="crew-label">主演</text>
-          <text class="crew-value">{{movie.actors}}</text>
-        </view>
-      </view>
-    </view>
-
-    <view class="section">
-      <view class="section-header">
-        <text class="section-title">用户评论 ({{comments.length}})</text>
-        <text class="section-more" bindtap="onShowCommentInput">写评论</text>
-      </view>
-      <view class="comment-list">
-        <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
-          <view class="comment-header">
-            <view class="comment-avatar">{{item.nickName[0]}}</view>
-            <view class="comment-info">
-              <text class="comment-name">{{item.nickName}}</text>
-              <view class="comment-rating">
-                <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{item <= item.rating ? 'active' : ''}}">★</text>
-              </view>
-            </view>
-            <text class="comment-time">{{item.createTime}}</text>
-          </view>
-          <text class="comment-content">{{item.content}}</text>
-        </view>
-      </view>
-    </view>
-
-    <view class="bottom-bar">
-      <view class="price-info">
-        <text class="price-label">票价</text>
-        <text class="price-value">{{movie.price}}元</text>
-      </view>
-      <view class="buy-btn" bindtap="onBuyTicket">立即购票</view>
+      <view class="buy-btn" bindtap="onBuyTicket">特惠购票</view>
     </view>
   </view>
 
@@ -99,7 +128,5 @@
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
-  </view>
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
 </view>

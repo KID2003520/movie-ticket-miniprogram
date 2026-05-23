@@ -1,3 +1,6 @@
+const backendApi = require('../../utils/backendApi.js');
+const { normalizeMovie } = require('../../utils/normalizeMovie.js');
+
 Page({
   data: {
     movies: [],
@@ -14,13 +17,13 @@ Page({
     currentSortLabel: '上映时间',
     genreList: [
       { value: '', label: '全部类型' },
-      { value: 'action', label: '动作' },
-      { value: 'comedy', label: '喜剧' },
-      { value: 'drama', label: '剧情' },
-      { value: 'scifi', label: '科幻' },
-      { value: 'romance', label: '爱情' },
-      { value: 'animation', label: '动画' },
-      { value: 'thriller', label: '悬疑' }
+      { value: '动作', label: '动作' },
+      { value: '喜剧', label: '喜剧' },
+      { value: '剧情', label: '剧情' },
+      { value: '科幻', label: '科幻' },
+      { value: '爱情', label: '爱情' },
+      { value: '动画', label: '动画' },
+      { value: '悬疑', label: '悬疑' }
     ],
     statusList: [
       { value: '', label: '全部状态' },
@@ -30,7 +33,7 @@ Page({
     ],
     sortList: [
       { value: 'releaseDate', label: '上映时间' },
-      { value: 'boxOffice', label: '票房' },
+      { value: 'hot', label: '热度' },
       { value: 'createTime', label: '添加时间' }
     ],
     showConfirmModal: false,
@@ -53,64 +56,44 @@ Page({
 
   loadMovies: function () {
     this.setData({ loading: true });
-
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const allMovies = wx.getStorageSync('adminMovies') || this.getMockMovies();
-        
+    return backendApi
+      .getMovies({})
+      .then((res) => {
+        const allMovies = ((res && res.data && res.data.items) || []).map(normalizeMovie).filter(Boolean);
         let filtered = [...allMovies];
-        
+
         if (this.data.currentGenre) {
-          filtered = filtered.filter(m => m.genreValue === this.data.currentGenre);
+          filtered = filtered.filter((m) => String(m.genre || '').includes(this.data.currentGenre));
         }
-        
+
         if (this.data.currentStatus) {
-          filtered = filtered.filter(m => m.status === this.data.currentStatus);
+          filtered = filtered.filter((m) => m.status === this.data.currentStatus);
         }
-        
+
         if (this.data.keyword) {
-          filtered = filtered.filter(m => 
-            m.title.toLowerCase().includes(this.data.keyword.toLowerCase())
+          filtered = filtered.filter((m) =>
+            String(m.title || '').toLowerCase().includes(this.data.keyword.toLowerCase())
           );
         }
-        
+
         filtered.sort((a, b) => {
-          if (this.data.currentSort === 'boxOffice') {
-            return (b.boxOffice || 0) - (a.boxOffice || 0);
-          } else if (this.data.currentSort === 'createTime') {
-            return new Date(b.createTime) - new Date(a.createTime);
-          } else {
-            return new Date(b.releaseDate) - new Date(a.releaseDate);
-          }
+          if (this.data.currentSort === 'hot') return (b.hot || 0) - (a.hot || 0);
+          if (this.data.currentSort === 'createTime') return new Date(b.createTime || 0) - new Date(a.createTime || 0);
+          return new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0);
         });
 
-        const start = 0;
         const end = this.data.page * this.data.pageSize;
-        const pagedMovies = filtered.slice(start, end);
-
+        const pagedMovies = filtered.slice(0, end);
         this.setData({
           movies: pagedMovies,
           hasMore: end < filtered.length,
           loading: false
         });
-
-        resolve();
-      }, 500);
-    });
-  },
-
-  getMockMovies: function () {
-    const mockMovies = [
-      { _id: '1', title: '流浪地球2', poster: 'https://picsum.photos/300/420?random=71', genre: '科幻', genreValue: 'scifi', duration: 173, price: 35, rating: 8.3, releaseDate: '2023-01-22', status: 'showing', boxOffice: 4029, createTime: '2023-01-01' },
-      { _id: '2', title: '满江红', poster: 'https://picsum.photos/300/420?random=72', genre: '剧情', genreValue: 'drama', duration: 159, price: 38, rating: 7.8, releaseDate: '2023-01-22', status: 'showing', boxOffice: 4544, createTime: '2023-01-02' },
-      { _id: '3', title: '熊出没·伴我"熊芯"', poster: 'https://picsum.photos/300/420?random=73', genre: '动画', genreValue: 'animation', duration: 101, price: 30, rating: 7.0, releaseDate: '2023-01-22', status: 'showing', boxOffice: 1479, createTime: '2023-01-03' },
-      { _id: '4', title: '无名', poster: 'https://picsum.photos/300/420?random=74', genre: '悬疑', genreValue: 'thriller', duration: 131, price: 35, rating: 7.5, releaseDate: '2023-01-22', status: 'off', boxOffice: 931, createTime: '2023-01-04' },
-      { _id: '5', title: '深海', poster: 'https://picsum.photos/300/420?random=75', genre: '动画', genreValue: 'animation', duration: 112, price: 32, rating: 7.3, releaseDate: '2023-01-22', status: 'coming', boxOffice: 0, createTime: '2023-01-05' },
-      { _id: '6', title: '交换人生', poster: 'https://picsum.photos/300/420?random=76', genre: '喜剧', genreValue: 'comedy', duration: 118, price: 35, rating: 6.5, releaseDate: '2023-01-22', status: 'showing', boxOffice: 394, createTime: '2023-01-06' }
-    ];
-    
-    wx.setStorageSync('adminMovies', mockMovies);
-    return mockMovies;
+      })
+      .catch((e) => {
+        wx.showToast({ title: (e && e.message) || '加载失败', icon: 'none' });
+        this.setData({ loading: false, movies: [] });
+      });
   },
 
   onGenreChange: function (e) {
@@ -222,31 +205,31 @@ Page({
   },
 
   doToggleStatus: function (id, newStatus) {
-    const movies = wx.getStorageSync('adminMovies') || [];
-    const index = movies.findIndex(m => m._id === id);
-    
-    if (index !== -1) {
-      movies[index].status = newStatus;
-      wx.setStorageSync('adminMovies', movies);
-      
-      wx.showToast({
-        title: newStatus === 'off' ? '已下架' : '已上架',
-        icon: 'success'
+    backendApi
+      .updateMovieStatus(id, newStatus)
+      .then(() => {
+        wx.showToast({
+          title: newStatus === 'off' ? '已下架' : '已上架',
+          icon: 'success'
+        });
+        this.setData({ page: 1, movies: [] });
+        this.loadMovies();
+      })
+      .catch((e) => {
+        wx.showToast({ title: (e && e.message) || '操作失败', icon: 'none' });
       });
-      
-      this.setData({ page: 1, movies: [] });
-      this.loadMovies();
-    }
   },
 
   doDelete: function (id) {
-    let movies = wx.getStorageSync('adminMovies') || [];
-    movies = movies.filter(m => m._id !== id);
-    wx.setStorageSync('adminMovies', movies);
-    
-    wx.showToast({ title: '删除成功', icon: 'success' });
-    
-    this.setData({ page: 1, movies: [] });
-    this.loadMovies();
+    backendApi
+      .deleteMovie(id)
+      .then(() => {
+        wx.showToast({ title: '删除成功', icon: 'success' });
+        this.setData({ page: 1, movies: [] });
+        this.loadMovies();
+      })
+      .catch((e) => {
+        wx.showToast({ title: (e && e.message) || '删除失败', icon: 'none' });
+      });
   }
 });

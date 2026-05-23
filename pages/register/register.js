@@ -1,4 +1,5 @@
 const app = getApp();
+const backendApi = require('../../utils/backendApi.js');
 
 Page({
   data: {
@@ -70,7 +71,13 @@ Page({
     }
     if (this.data.countdown > 0) return;
 
-    wx.showToast({ title: '验证码已发送', icon: 'success' });
+    // 由于当前项目没有真实短信服务，这里做“本地模拟验证码”
+    const code = String(Math.floor(100000 + Math.random() * 900000)); // 6位
+    const expireAt = Date.now() + 5 * 60 * 1000; // 5分钟过期
+    const phoneKey = `smsCode_${this.data.phone}`;
+    wx.setStorageSync(phoneKey, { code, expireAt });
+
+    wx.showToast({ title: `验证码已发送（${code}）`, icon: 'success' });
     this.startCountdown();
   },
 
@@ -98,12 +105,34 @@ Page({
       isValid = false;
     }
 
-    if (!this.data.code) {
-      this.setData({ codeError: '请输入验证码' });
-      isValid = false;
-    } else if (this.data.code.length < 4) {
-      this.setData({ codeError: '验证码格式不正确' });
-      isValid = false;
+    // type=register：验证码必填；type=login：允许不填（纯“手机号+密码”登录）
+    if (this.data.type === 'register') {
+      if (!this.data.code) {
+        this.setData({ codeError: '请输入验证码' });
+        isValid = false;
+      } else if (this.data.code.length < 4) {
+        this.setData({ codeError: '验证码格式不正确' });
+        isValid = false;
+      }
+
+      // 校验本地模拟验证码
+      if (isValid) {
+        const phoneKey = `smsCode_${this.data.phone}`;
+        const saved = wx.getStorageSync(phoneKey);
+        if (!saved || !saved.code || !saved.expireAt) {
+          this.setData({ codeError: '请先获取验证码' });
+          wx.showToast({ title: '请先获取验证码', icon: 'none' });
+          isValid = false;
+        } else if (Date.now() > saved.expireAt) {
+          this.setData({ codeError: '验证码已过期，请重新获取' });
+          wx.showToast({ title: '验证码已过期', icon: 'none' });
+          isValid = false;
+        } else if (String(saved.code) !== String(this.data.code)) {
+          this.setData({ codeError: '验证码错误' });
+          wx.showToast({ title: '验证码错误', icon: 'none' });
+          isValid = false;
+        }
+      }
     }
 
     if (this.data.type === 'register') {
@@ -127,6 +156,15 @@ Page({
         wx.showToast({ title: '请同意用户协议', icon: 'none' });
         isValid = false;
       }
+    } else if (this.data.type === 'login') {
+      // 登录也需要密码
+      if (!this.data.password) {
+        this.setData({ passwordError: '请输入密码' });
+        isValid = false;
+      } else if (this.data.password.length < 6) {
+        this.setData({ passwordError: '密码至少6位' });
+        isValid = false;
+      }
     }
 
     return isValid;
@@ -146,16 +184,103 @@ Page({
     }
   },
 
-  onRegister: function () {
+  onRegister: async function () {
     if (!this.validateForm()) return;
 
     this.setData({ loading: true });
     wx.showLoading({ title: '注册中...' });
 
     try {
+      const app = getApp();
+      // 非云开发：走后端 MySQL（手机号+密码）
+      if (!app.globalData.cloudReady) {
+        if (this.data.type === 'login') {
+          const res = await backendApi.loginPhonePassword({
+            phone: this.data.phone,
+            password: this.data.password
+          });
+
+          if (!res || res.code !== 0) {
+            wx.hideLoading();
+            wx.showToast({ title: res?.message || '登录失败', icon: 'none' });
+            this.setData({ loading: false });
+            return;
+          }
+
+          const { openid, userInfo } = res.data || {};
+          app.globalData.userInfo = userInfo;
+          app.globalData.openid = openid;
+          app.globalData.isLogin = true;
+          wx.setStorageSync('userInfo', userInfo);
+          wx.setStorageSync('openid', openid);
+          wx.setStorageSync('isLogin', true);
+
+          wx.hideLoading();
+          wx.showToast({ title: '登录成功', icon: 'success' });
+          setTimeout(() => this.navigateAfterSuccess(), 800);
+          return;
+        }
+
+        // type=register：注册
+        const res = await backendApi.registerPhonePassword({
+          phone: this.data.phone,
+          password: this.data.password
+        });
+
+        if (!res || res.code !== 0) {
+          wx.hideLoading();
+          wx.showToast({ title: res?.message || '注册失败', icon: 'none' });
+          this.setData({ loading: false });
+          return;
+        }
+
+        const { openid, userInfo } = res.data || {};
+        app.globalData.userInfo = userInfo;
+        app.globalData.openid = openid;
+        app.globalData.isLogin = true;
+        wx.setStorageSync('userInfo', userInfo);
+        wx.setStorageSync('openid', openid);
+        wx.setStorageSync('isLogin', true);
+
+        wx.hideLoading();
+        wx.showToast({ title: '注册成功', icon: 'success' });
+        setTimeout(() => this.navigateAfterSuccess(), 800);
+        return;
+      }
+
       const users = wx.getStorageSync('users') || [];
       
       const existingUser = users.find(u => u.phone === this.data.phone);
+
+      // type=login：手机号登录（不创建新用户）
+      if (this.data.type === 'login') {
+        if (!existingUser) {
+          wx.hideLoading();
+          wx.showToast({ title: '该手机号未注册', icon: 'none' });
+          this.setData({ loading: false });
+          return;
+        }
+
+        app.globalData.userInfo = existingUser;
+        app.globalData.openid = existingUser.openid;
+        app.globalData.isLogin = true;
+
+        wx.setStorageSync('userInfo', existingUser);
+        wx.setStorageSync('openid', existingUser.openid);
+        wx.setStorageSync('isLogin', true);
+
+        setTimeout(() => {
+          wx.hideLoading();
+          wx.showToast({ title: '登录成功', icon: 'success' });
+          setTimeout(() => {
+            this.navigateAfterSuccess();
+          }, 1500);
+        }, 500);
+
+        return;
+      }
+
+      // type=register：注册（不存在才创建）
       if (existingUser) {
         wx.hideLoading();
         wx.showToast({ title: '该手机号已注册', icon: 'none' });
@@ -169,7 +294,8 @@ Page({
         password: this.data.password,
         nickName: '用户' + this.data.phone.slice(-4),
         avatarUrl: 'https://picsum.photos/100/100?random=' + Math.floor(Math.random() * 100),
-        openid: 'mock_openid_' + Date.now(),
+        // 用手机号生成稳定 openid，保证同一个手机号多次登录不会创建不同 openid
+        openid: 'mock_openid_' + this.data.phone,
         createTime: Date.now(),
         loginTime: Date.now()
       };
@@ -188,7 +314,6 @@ Page({
       setTimeout(() => {
         wx.hideLoading();
         wx.showToast({ title: '注册成功', icon: 'success' });
-        
         setTimeout(() => {
           this.navigateAfterSuccess();
         }, 1500);
@@ -203,16 +328,10 @@ Page({
   },
 
   onLogin: function () {
-    const pages = getCurrentPages();
-    
-    if (pages.length > 1) {
-      wx.navigateBack({
-        fail: () => {
-          wx.redirectTo({ url: '/pages/login/login' });
-        }
-      });
-    } else {
-      wx.redirectTo({ url: '/pages/login/login' });
-    }
+    // 账号切换：
+    // type=login: 去注册（type=register）
+    // type=register: 去登录（type=login）
+    const nextType = this.data.type === 'login' ? 'register' : 'login';
+    wx.redirectTo({ url: `/pages/register/register?type=${nextType}` });
   }
 });

@@ -1,0 +1,205 @@
+%% 在线电影购票微信小程序 — 总体 ER 图（已按实际库表校正，Chen 记法）
+%% 说明：场次含 hallName/hallType 冗余字段，与影厅表无 hallId 外键（逻辑配置，非菱形联系）
+%% 渲染：https://mermaid.live  → Export PNG/SVG
+%% 排版更佳：同目录 微信小程序总体ER图-Chen.dot → GraphvizOnline
+
+flowchart TB
+  classDef entity fill:#fff,stroke:#333,stroke-width:2px
+  classDef attr fill:#fff,stroke:#333
+  classDef rel fill:#fff,stroke:#333
+  classDef note fill:#f9f9f9,stroke:#999,stroke-dasharray:4
+
+  %% ---------- 用户 users ----------
+  用户[用户]:::entity
+  u1((用户编号 _id)):::attr
+  u2((手机号 phone)):::attr
+  u3((昵称 nickName)):::attr
+  u4((密码 password)):::attr
+  u5((头像 avatarUrl)):::attr
+  u6((是否管理员 isAdmin)):::attr
+  u7((账号状态 account_status)):::attr
+  u8((注册时间 createTime)):::attr
+  用户 --- u1 & u2 & u3 & u4 & u5 & u6 & u7 & u8
+
+  %% ---------- 影片 movies ----------
+  影片[影片]:::entity
+  m1((影片编号)):::attr
+  m2((片名 title)):::attr
+  m3((海报 poster)):::attr
+  m4((评分 rating)):::attr
+  m5((类型 genre)):::attr
+  m6((参考票价 price)):::attr
+  m7((上映状态 status)):::attr
+  影片 --- m1 & m2 & m3 & m4 & m5 & m6 & m7
+
+  %% ---------- 影院 cinemas ----------
+  影院[影院]:::entity
+  c1((影院编号)):::attr
+  c2((影院名称)):::attr
+  c3((城市 city)):::attr
+  c4((地址 address)):::attr
+  c5((最低价 minPrice)):::attr
+  影院 --- c1 & c2 & c3 & c4 & c5
+
+  %% ---------- 影厅 cinema_halls（配置表）----------
+  影厅[影厅]:::entity
+  h1((影厅编号)):::attr
+  h2((影厅名称 name)):::attr
+  h3((影厅类型 hallType)):::attr
+  h4((座位行数 seatRows)):::attr
+  h5((座位列数 seatCols)):::attr
+  影厅 --- h1 & h2 & h3 & h4 & h5
+
+  %% ---------- 场次 schedules ----------
+  场次[场次]:::entity
+  s1((场次编号)):::attr
+  s2((放映日期 date)):::attr
+  s3((开始时间 startTime)):::attr
+  s4((场次票价 price)):::attr
+  s5((余票数 availableSeats)):::attr
+  s6((影厅名称 hallName)):::attr
+  s7((影厅类型 hallType)):::attr
+  场次 --- s1 & s2 & s3 & s4 & s5 & s6 & s7
+
+  场次注["注：hallName/hallType 为冗余，排片时由影厅配置复制"]:::note
+  场次 -.-> 场次注
+
+  %% ---------- 座位 seats ----------
+  座位[座位]:::entity
+  t1((座位编号)):::attr
+  t2((行号 rowNum)):::attr
+  t3((列号 colNum)):::attr
+  t4((状态 status)):::attr
+  座位 --- t1 & t2 & t3 & t4
+
+  %% ---------- 订单 orders ----------
+  订单[订单]:::entity
+  o1((订单编号)):::attr
+  o2((订单号 orderNo)):::attr
+  o3((实付金额 totalPrice)):::attr
+  o4((订单状态 status)):::attr
+  o5((座位数 seatCount)):::attr
+  o6((座位快照 seatsJson)):::attr
+  o7((下单时间 createTime)):::attr
+  o8((支付时间 payTime)):::attr
+  订单 --- o1 & o2 & o3 & o4 & o5 & o6 & o7 & o8
+
+  %% ---------- 收藏 collections ----------
+  收藏[收藏]:::entity
+  f1((收藏编号)):::attr
+  f2((用户标识 _openid)):::attr
+  f3((影片编号 movieId)):::attr
+  f4((片名 title 冗余)):::attr
+  f5((收藏时间 createTime)):::attr
+  收藏 --- f1 & f2 & f3 & f4 & f5
+
+  %% ---------- 影评 movie_comments ----------
+  影评[影评]:::entity
+  cm1((评论编号)):::attr
+  cm2((用户标识 _openid)):::attr
+  cm3((影片编号 movieId)):::attr
+  cm4((评分 rating)):::attr
+  cm5((内容 content)):::attr
+  cm6((评论时间 createTime)):::attr
+  影评 --- cm1 & cm2 & cm3 & cm4 & cm5 & cm6
+
+  %% ---------- 优惠券 coupon_templates ----------
+  优惠券[优惠券模板]:::entity
+  cp1((模板编号)):::attr
+  cp2((券名称 title)):::attr
+  cp3((面额 amount)):::attr
+  cp4((门槛 minAmount)):::attr
+  cp5((售价 sellPrice)):::attr
+  cp6((库存 stock)):::attr
+  cp7((状态 status)):::attr
+  优惠券 --- cp1 & cp2 & cp3 & cp4 & cp5 & cp6 & cp7
+
+  %% ---------- 用户券 user_coupons ----------
+  用户券[用户优惠券]:::entity
+  uc1((用户券编号)):::attr
+  uc2((用户标识 _openid)):::attr
+  uc3((模板编号 templateId)):::attr
+  uc4((状态 status)):::attr
+  uc5((锁定订单 lockOrderId)):::attr
+  uc6((使用订单 usedOrderId)):::attr
+  uc7((过期时间 expireTime)):::attr
+  用户券 --- uc1 & uc2 & uc3 & uc4 & uc5 & uc6 & uc7
+
+  %% ---------- 购券单 coupon_purchase_orders ----------
+  购券单[购券订单]:::entity
+  po1((购券单编号)):::attr
+  po2((用户标识 _openid)):::attr
+  po3((模板编号 templateId)):::attr
+  po4((数量 qty)):::attr
+  po5((单价 unitPrice)):::attr
+  po6((总金额 totalPrice)):::attr
+  po7((状态 status)):::attr
+  购券单 --- po1 & po2 & po3 & po4 & po5 & po6 & po7
+
+  %% ---------- 积分 / 退款（扩展）----------
+  积分余额[积分余额]:::entity
+  pb1((用户标识 _openid)):::attr
+  pb2((积分 balance)):::attr
+  积分余额 --- pb1 & pb2
+
+  积分流水[积分流水]:::entity
+  pl1((流水编号)):::attr
+  pl2((变动 delta)):::attr
+  pl3((来源类型 source_type)):::attr
+  积分流水 --- pl1 & pl2 & pl3
+
+  退款申请[退款申请]:::entity
+  rf1((申请编号)):::attr
+  rf2((订单编号 orderId)):::attr
+  rf3((申请人 requesterOpenid)):::attr
+  rf4((状态 status)):::attr
+  退款申请 --- rf1 & rf2 & rf3 & rf4
+
+  %% ---------- 联系（菱形）----------
+  下单{{下单}}:::rel
+  排片{{排片}}:::rel
+  放映{{放映}}:::rel
+  下设{{下设}}:::rel
+  生成{{生成}}:::rel
+  预订{{预订}}:::rel
+  售出{{售出}}:::rel
+  收藏动{{收藏}}:::rel
+  被收藏{{被收藏}}:::rel
+  发表{{发表}}:::rel
+  被评{{被评}}:::rel
+  持有{{持有}}:::rel
+  发放{{发放}}:::rel
+  购券{{购券}}:::rel
+  售卖{{售卖}}:::rel
+  用券{{使用}}:::rel
+  拥有积分{{拥有}}:::rel
+  产生流水{{产生}}:::rel
+  申请退款{{申请退款}}:::rel
+
+  %% 购票主链路
+  用户 -->|1| 下单 -->|n| 订单
+  影片 -->|1| 排片 -->|n| 场次
+  影院 -->|1| 放映 -->|n| 场次
+  影院 -->|1| 下设 -->|n| 影厅
+  场次 -->|1| 生成 -->|n| 座位
+  场次 -->|1| 预订 -->|n| 订单
+  订单 -->|1| 售出 -->|n| 座位
+
+  %% 互动
+  用户 -->|1| 收藏动 -->|n| 收藏
+  影片 -->|1| 被收藏 -->|n| 收藏
+  用户 -->|1| 发表 -->|n| 影评
+  影片 -->|1| 被评 -->|n| 影评
+
+  %% 优惠券
+  用户 -->|1| 持有 -->|n| 用户券
+  优惠券 -->|1| 发放 -->|n| 用户券
+  用户 -->|1| 购券 -->|n| 购券单
+  优惠券 -->|1| 售卖 -->|n| 购券单
+  订单 -->|0..1| 用券 -->|1| 用户券
+
+  %% 积分与退款
+  用户 -->|1| 拥有积分 -->|1| 积分余额
+  用户 -->|1| 产生流水 -->|n| 积分流水
+  用户 -->|1| 申请退款 -->|n| 退款申请
+  订单 -->|1| 申请退款 -->|n| 退款申请

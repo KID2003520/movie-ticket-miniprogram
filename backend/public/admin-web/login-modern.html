@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineAdmin 登录</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --netflix-red: #e50914;
+      --imdb-gold: #f5c518;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: Inter, "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .cinema-bg {
+      background:
+        linear-gradient(115deg, rgba(10, 10, 15, 0.55), rgba(10, 10, 15, 0.8)),
+        radial-gradient(900px 400px at 20% 10%, rgba(229, 9, 20, 0.25), transparent 60%),
+        radial-gradient(700px 350px at 90% 90%, rgba(245, 197, 24, 0.14), transparent 65%),
+        url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .input-shell {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      transition: all .22s ease;
+    }
+
+    .input-shell:focus-within {
+      border-color: rgba(229, 9, 20, 0.72);
+      box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.18), 0 0 24px rgba(229, 9, 20, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #7c1fff 0%, #e50914 50%, #ff6a00 100%);
+      box-shadow: 0 10px 22px rgba(229, 9, 20, 0.38);
+      transition: transform .14s ease, box-shadow .2s ease, filter .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn:hover {
+      transform: scale(1.02);
+      filter: brightness(1.05);
+      box-shadow: 0 14px 28px rgba(229, 9, 20, 0.46);
+    }
+
+    .login-btn:active {
+      transform: scale(0.985);
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple .65s ease-out;
+      background: rgba(255, 255, 255, 0.45);
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(3.5);
+        opacity: 0;
+      }
+    }
+
+    .loading-ring {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.32);
+      border-top-color: #fff;
+      animation: spin .75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-white">
+  <main class="min-h-screen md:grid md:grid-cols-12">
+    <!-- 左侧氛围背景 -->
+    <section class="relative hidden md:block md:col-span-7 lg:col-span-8 cinema-bg overflow-hidden">
+      <canvas id="particles" class="absolute inset-0 h-full w-full"></canvas>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/65"></div>
+      <div class="relative z-10 flex h-full flex-col justify-end p-12">
+        <p class="text-sm tracking-[0.2em] text-red-300/85">CINEMA MANAGEMENT PLATFORM</p>
+        <h1 class="mt-4 max-w-xl text-4xl font-semibold leading-tight lg:text-5xl">
+          管理每一场放映，掌控每一次票务增长
+        </h1>
+        <p class="mt-5 max-w-lg text-sm text-slate-200/85">
+          实时洞察票房、排片和用户转化数据，打造专业级电影运营后台。
+        </p>
+      </div>
+    </section>
+
+    <!-- 右侧玻璃登录 -->
+    <section class="relative flex min-h-screen items-center justify-center px-5 py-8 md:col-span-5 md:px-8 lg:col-span-4">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(229,9,20,0.2),transparent_45%),radial-gradient(circle_at_80%_90%,rgba(245,197,24,0.14),transparent_45%)]"></div>
+      <div class="glass-card relative z-10 w-full max-w-md rounded-3xl p-6 sm:p-8">
+        <div class="mb-7">
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5">
+            <svg class="h-4 w-4 text-[#f5c518]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M3 7a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7zm12-2a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2zM9 10h6v4H9v-4z"/>
+            </svg>
+            <span class="text-xs font-medium text-slate-200">电影管理后台</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-orange-500 shadow-lg shadow-red-800/35">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M3 7h10v10H3zM13 10l8-3v10l-8-3z"></path>
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-semibold tracking-tight">CineAdmin</h2>
+              <p class="text-xs text-slate-300">欢迎回来，请登录继续</p>
+            </div>
+          </div>
+        </div>
+
+        <form id="login-form" class="space-y-4" action="javascript:void(0)">
+          <label class="block">
+            <span class="mb-1.5 block text-xs text-slate-300">邮箱 / 用户名</span>
+            <div class="input-shell flex items-center gap-2 rounded-xl px-3">
+              <svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 6h16v12H4z"></path><path d="M4 7l8 6 8-6"></path>
+              </svg>
+              <input id="username" class="h-11 w-full bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none" placeholder="admin@cine.com" />
+            </div>
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-xs text-slate-300">密码</span>
+            <div class="input-shell flex items-center gap-2 rounded-xl px-3">
+              <svg class="h-4 w-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 118 0v3"></path>
+              </svg>
+              <input id="password" type="password" class="h-11 w-full bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none" placeholder="请输入密码" />
+              <button id="toggle-pass" type="button" class="rounded p-1 text-slate-300 hover:bg-white/10 hover:text-white" aria-label="切换密码显示">
+                <svg id="eye-open" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path><circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg id="eye-close" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M3 3l18 18"></path><path d="M10.5 10.5a3 3 0 004 4"></path><path d="M9.9 5.2A11.4 11.4 0 0112 5c6.5 0 10 7 10 7a18.6 18.6 0 01-3 3.8"></path><path d="M6.2 6.2A18.2 18.2 0 002 12s3.5 7 10 7a10.9 10.9 0 005.1-1.2"></path>
+                </svg>
+              </button>
+            </div>
+          </label>
+
+          <div id="login-error" class="hidden rounded-xl border border-red-300/50 bg-red-500/10 px-3 py-2 text-xs text-red-200"></div>
+
+          <div class="flex items-center justify-between text-xs text-slate-300">
+            <label class="inline-flex items-center gap-2">
+              <input type="checkbox" class="h-4 w-4 rounded border-white/30 bg-transparent text-red-600 focus:ring-red-500/50" />
+              <span>记住密码</span>
+            </label>
+            <a href="#" class="text-[#f5c518] hover:text-yellow-300">忘记密码？</a>
+          </div>
+
+          <button id="login-btn" class="login-btn mt-2 flex h-11 w-full items-center justify-center rounded-xl text-sm font-semibold">
+            <span id="btn-text">登录进入后台</span>
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const STORAGE_OPENID = "movieTicketWebAdminOpenid";
+      const STORAGE_USER = "movieTicketWebAdminUser";
+      const pass = document.getElementById("password");
+      const username = document.getElementById("username");
+      const toggle = document.getElementById("toggle-pass");
+      const eyeOpen = document.getElementById("eye-open");
+      const eyeClose = document.getElementById("eye-close");
+      const btn = document.getElementById("login-btn");
+      const btnText = document.getElementById("btn-text");
+      const loginErr = document.getElementById("login-error");
+      const form = document.getElementById("login-form");
+
+      function showErr(msg) {
+        if (!msg) {
+          loginErr.textContent = "";
+          loginErr.classList.add("hidden");
+          return;
+        }
+        loginErr.textContent = msg;
+        loginErr.classList.remove("hidden");
+      }
+
+      function setLoading(on, text) {
+        btn.disabled = !!on;
+        if (on) {
+          btnText.innerHTML = '<span class="inline-flex items-center gap-2"><span class="loading-ring"></span>' + (text || "正在登录...") + "</span>";
+        } else {
+          btnText.textContent = "登录进入后台";
+        }
+      }
+
+      toggle.addEventListener("click", () => {
+        const hidden = pass.type === "password";
+        pass.type = hidden ? "text" : "password";
+        eyeOpen.classList.toggle("hidden", hidden);
+        eyeClose.classList.toggle("hidden", !hidden);
+      });
+
+      btn.addEventListener("click", (e) => {
+        const rect = btn.getBoundingClientRect();
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + "px";
+        ripple.style.left = e.clientX - rect.left - size / 2 + "px";
+        ripple.style.top = e.clientY - rect.top - size / 2 + "px";
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
+      });
+
+      form.addEventListener("submit", async () => {
+        showErr("");
+        const phone = String(username.value || "").trim();
+        const password = String(pass.value || "");
+
+        if (!/^1[3-9]\d{9}$/.test(phone)) {
+          showErr("当前后端使用手机号登录，请输入 11 位中国大陆手机号。");
+          return;
+        }
+        if (password.length < 6) {
+          showErr("密码至少 6 位。");
+          return;
+        }
+
+        setLoading(true, "正在验证身份...");
+        try {
+          const res = await fetch("/api/auth/login-phone-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone, password })
+          });
+          const body = await res.json().catch(() => ({}));
+          if (!body || body.code !== 0) {
+            showErr((body && body.message) || "登录失败，请检查账号和密码。");
+            return;
+          }
+
+          const data = body.data || {};
+          const user = data.userInfo || {};
+          if (Number(user.isAdmin) !== 1 && user.isAdmin !== true) {
+            showErr("该账号不是管理员，请使用管理员账号登录。");
+            return;
+          }
+
+          sessionStorage.setItem(STORAGE_OPENID, data.openid || user._id || "");
+          sessionStorage.setItem(STORAGE_USER, JSON.stringify(user));
+          setLoading(true, "登录成功，正在进入后台...");
+          setTimeout(() => {
+            location.href = "/admin-web";
+          }, 550);
+        } catch (e) {
+          showErr("网络异常，请确认后端已启动。");
+        } finally {
+          setTimeout(() => {
+            if (!btn.disabled || location.pathname !== "/admin-web") setLoading(false);
+          }, 200);
+        }
+      });
+
+      // 轻量粒子背景
+      const canvas = document.getElementById("particles");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const particles = [];
+      const P_COUNT = 56;
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function init() {
+        particles.length = 0;
+        for (let i = 0; i < P_COUNT; i++) {
+          particles.push({
+            x: Math.random() * canvas.clientWidth,
+            y: Math.random() * canvas.clientHeight,
+            r: Math.random() * 1.8 + 0.4,
+            vx: (Math.random() - 0.5) * 0.25,
+            vy: (Math.random() - 0.5) * 0.25,
+            a: Math.random() * 0.5 + 0.15
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -10) p.x = canvas.clientWidth + 10;
+          if (p.x > canvas.clientWidth + 10) p.x = -10;
+          if (p.y < -10) p.y = canvas.clientHeight + 10;
+          if (p.y > canvas.clientHeight + 10) p.y = -10;
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", () => {
+        resize();
+        init();
+      });
+      resize();
+      init();
+      draw();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<view class="container">
+  <!-- 常见问题 -->
+  <view class="section">
+    <view class="section-title">常见问题</view>
+    <view class="faq-list">
+      <view class="faq-item" wx:for="{{faqList}}" wx:key="id">
+        <view class="faq-question" bindtap="onToggleFAQ" data-id="{{item.id}}">
+          <text class="question-text">{{item.question}}</text>
+          <text class="question-arrow {{item.isOpen ? 'open' : ''}}">▼</text>
+        </view>
+        <view class="faq-answer" wx:if="{{item.isOpen}}">
+          <text>{{item.answer}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="section">
+    <view class="section-title">联系我们</view>
+    <view class="contact-list">
+      <view class="contact-item" wx:for="{{contactList}}" wx:key="title" bindtap="onContactTap" data-action="{{item.action}}" data-content="{{item.content}}">
+        <view class="contact-icon">{{item.icon}}</view>
+        <view class="contact-info">
+          <text class="contact-title">{{item.title}}</text>
+          <text class="contact-content">{{item.content}}</text>
+        </view>
+        <text class="contact-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 意见反馈 -->
+  <view class="section">
+    <view class="section-title">意见反馈</view>
+    <view class="feedback-card" bindtap="onFeedbackTap">
+      <view class="feedback-icon">📝</view>
+      <view class="feedback-info">
+        <text class="feedback-title">提交反馈</text>
+        <text class="feedback-desc">帮助我们改进产品</text>
+      </view>
+      <text class="feedback-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 温馨提示 -->
+  <view class="tips-card">
+    <view class="tips-title">温馨提示</view>
+    <text class="tips-text">• 客服工作时间：9:00-22:00\n• 退款将在3-5个工作日内到账\n• 如有紧急问题请拨打客服热线</text>
+  </view>
+</view>

@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background-color: #f5f6fa;
+  background-color: #f5f5f5;
   padding-bottom: 140rpx;
 }
 
@@ -18,7 +18,7 @@
   color: #333;
   margin-bottom: 30rpx;
   padding-left: 16rpx;
-  border-left: 6rpx solid #667eea;
+  border-left: 6rpx solid #ff5f16;
 }
 
 .form-item {
@@ -60,7 +60,7 @@
 
 .input:focus {
   background: #fff;
-  border-color: #667eea;
+  border-color: #ff5f16;
 }
 
 .input-with-unit {
@@ -179,7 +179,7 @@
 }
 
 .status-option.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
 }
 
@@ -212,7 +212,7 @@
 }
 
 .btn.submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
 }
 
@@ -272,6 +272,6 @@
 }
 
 .modal-btn.confirm {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #ff7a00 0%, #ff4d22 100%);
   color: #fff;
 }

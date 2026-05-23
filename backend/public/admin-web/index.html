@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>电影票务 · 管理控制台</title>
+  <link rel="stylesheet" href="/admin-web/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#dash-main">跳到主内容</a>
+  <div id="screen-login" class="page-login">
+    <div class="login-grid">
+      <aside class="login-hero" id="login-hero">
+        <span class="login-orb orb-a" aria-hidden="true"></span>
+        <span class="login-orb orb-b" aria-hidden="true"></span>
+        <span class="login-orb orb-c" aria-hidden="true"></span>
+        <span class="tag">Web 控制台</span>
+        <h1>票务管理后台</h1>
+        <p>与微信小程序管理端同源能力：概览、电影、用户、影院、报表与全站订单。</p>
+      </aside>
+      <div class="login-panel" id="login-panel">
+        <h2>管理员登录</h2>
+        <p class="lead">使用与小程序一致的<strong>手机号 + 密码</strong>；数据库 <code>isAdmin = 1</code>。</p>
+        <div id="login-err" class="err-box hidden" role="alert"></div>
+        <div class="field">
+          <label for="phone">手机号</label>
+          <input id="phone" type="tel" maxlength="11" placeholder="11 位手机号" autocomplete="username" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="password">密码</label>
+          <input id="password" type="password" placeholder="至少 6 位" autocomplete="current-password" />
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-login">进入后台</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-dash" class="page-dash hidden">
+    <header class="dash-header" role="banner">
+      <div class="dash-breadcrumb" aria-label="面包屑">
+        <span class="bc-root">管理控制台</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <strong id="bc-current">数据概览</strong>
+        <span class="env-pill" title="生产环境请配置 HTTPS 与独立域名">本地</span>
+      </div>
+      <div class="dash-actions right-tools">
+        <label class="top-search" aria-label="全局搜索" title="跨模块检索能力建设中，当前为占位入口">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M20 20l-3.5-3.5"></path>
+          </svg>
+          <input type="search" placeholder="搜索电影 / 用户 / 订单" />
+        </label>
+        <button type="button" class="icon-btn" aria-label="消息中心" title="消息中心（敬请期待）">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M6 8a6 6 0 1112 0c0 7 3 7 3 9H3c0-2 3-2 3-9"></path>
+            <path d="M10 21a2 2 0 004 0"></path>
+          </svg>
+          <span class="dot"></span>
+        </button>
+        <div class="user-chip online">
+          <div class="user-avatar" id="dash-avatar" aria-hidden="true">管</div>
+          <div class="user-meta">
+            <strong id="dash-user-name">—</strong>
+            <small id="dash-user-phone"></small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost" id="btn-logout">退出登录</button>
+      </div>
+    </header>
+
+    <div class="layout-dash">
+      <nav class="side-nav" aria-label="主导航" id="dash-side-nav">
+        <div class="side-brand">
+          <div class="dash-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 7h18v10H3z"></path>
+              <path d="M7 7v10M17 7v10M3 11h18"></path>
+            </svg>
+          </div>
+          <div>
+            <h1>管理后台</h1>
+            <span>Web · 小程序管理功能对齐</span>
+          </div>
+        </div>
+        <button type="button" class="nav-item active" data-view="overview" aria-current="page">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3h8v6h-8zM3 21h8v-6H3z"></path></svg></span> 数据概览
+        </button>
+        <button type="button" class="nav-item" data-view="movies">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 4v16M17 4v16M3 9h18M3 15h18"></path></svg></span> 电影管理
+        </button>
+        <button type="button" class="nav-item" data-view="users">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg></span> 用户管理
+        </button>
+        <button type="button" class="nav-item" data-view="cinemas">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 12h6M9 16h6"></path></svg></span> 影院管理
+        </button>
+        <button type="button" class="nav-item" data-view="reports">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path></svg></span> 数据报表
+        </button>
+        <button type="button" class="nav-item" data-view="orders">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h12l3 6v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8l3-6z"></path><path d="M3 8h18M16 12H8"></path></svg></span> 订单管理
+        </button>
+        <button type="button" class="nav-item" data-view="account">
+          <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 11a3 3 0 100-6 3 3 0 000 6z"></path><path d="M4 22a8 8 0 0116 0M16 11h5v3h-5"></path></svg></span> 账号与安全
+        </button>
+      </nav>
+
+      <main id="dash-main" class="dash-content" tabindex="-1">
+        <!-- 概览 -->
+        <section id="view-overview" class="view-section active" aria-labelledby="overview-title">
+          <div class="section-head">
+            <h2 id="overview-title">今日概览</h2>
+            <p id="stats-updated" class="section-meta">—</p>
+          </div>
+          <div class="panel">
+            <div id="stats-loading"><div class="skeleton-line"></div><div class="skeleton-line" style="max-width:120px"></div></div>
+            <div id="stats-grid" class="stats-grid hidden">
+              <div class="stat-card stat-orders" style="--delay:0ms"><span class="top-bar" aria-hidden="true"></span><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2h12l3 6v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8l3-6z"/><path d="M3 8h18"/></svg></span><div class="val" id="s-orders">—</div><div class="lbl">今日订单</div><div class="stat-sub">当日创建笔数</div></div>
+              <div class="stat-card stat-revenue" style="--delay:80ms"><span class="top-bar" aria-hidden="true"></span><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><div class="val revenue" id="s-revenue">—</div><div class="lbl">今日收入（元）</div><div class="stat-sub">已支付订单实收</div></div>
+              <div class="stat-card stat-users" style="--delay:160ms"><span class="top-bar" aria-hidden="true"></span><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span><div class="val" id="s-users">—</div><div class="lbl">今日新增用户</div><div class="stat-sub">注册入库人数</div></div>
+              <div class="stat-card stat-movies" style="--delay:240ms"><span class="top-bar" aria-hidden="true"></span><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h18M3 15h18"/></svg></span><div class="val" id="s-movies">—</div><div class="lbl">在映 / 待映影片</div><div class="stat-sub">上映中 + 即将上映</div></div>
+            </div>
+          </div>
+          <div class="section-head"><h2>近 7 日订单趋势</h2><p>按创建日</p></div>
+          <div class="panel">
+            <div id="trend-loading"><div class="skeleton-line"></div></div>
+            <div id="trend-wrap" class="hidden">
+              <div class="table-wrap">
+                <table class="data-table data-table--stats">
+                  <colgroup>
+                    <col class="col-label" />
+                    <col class="col-num" span="3" />
+                  </colgroup>
+                  <thead><tr><th>日期</th><th class="col-num">订单数</th><th class="col-num">收入（元）</th><th class="col-num">下单人数</th></tr></thead>
+                  <tbody id="trend-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 电影 -->
+        <section id="view-movies" class="view-section">
+          <div class="section-head"><h2>电影管理</h2><p>列表来自 MySQL，筛选在浏览器端完成</p></div>
+          <div class="panel">
+            <div class="toolbar movies-toolbar">
+              <input type="search" id="mv-keyword" placeholder="片名关键词" />
+              <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="mv-search">搜索</button>
+              <select id="mv-genre">
+                <option value="">全部类型</option>
+                <option value="动作">动作</option>
+                <option value="喜剧">喜剧</option>
+                <option value="剧情">剧情</option>
+                <option value="科幻">科幻</option>
+                <option value="爱情">爱情</option>
+                <option value="动画">动画</option>
+                <option value="悬疑">悬疑</option>
+              </select>
+              <select id="mv-status">
+                <option value="">全部状态</option>
+                <option value="showing">上映中</option>
+                <option value="coming">即将上映</option>
+                <option value="off">已下架</option>
+              </select>
+              <select id="mv-sort">
+                <option value="releaseDate">上映时间</option>
+                <option value="hot">热度</option>
+                <option value="createTime">添加时间</option>
+              </select>
+            </div>
+            <div id="movies-loading"><div class="skeleton-line"></div></div>
+            <div id="movies-table-wrap" class="hidden">
+              <p id="movies-meta" class="muted" style="margin-bottom:10px"></p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr><th style="width:48px">海报</th><th>影片</th><th>类型</th><th>上映日</th><th>状态</th><th>票价(元)</th><th>操作</th></tr>
+                  </thead>
+                  <tbody id="movies-tbody"></tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-ghost hidden" style="margin-top:12px;width:100%" id="movies-loadmore">加载更多</button>
+            </div>
+          </div>
+          <p class="foot-note">支持按类型、状态筛选，以及对影片进行上架、下架与删除。</p>
+        </section>
+
+        <!-- 用户 -->
+        <section id="view-users" class="view-section">
+          <div class="section-head">
+            <h2>用户管理</h2>
+            <p>支持按注册时间、手机号、活跃度与账号状态筛选；可查看行为概览并联动订单与影评数据。禁用后该用户无法登录且接口返回 403。</p>
+          </div>
+          <div class="panel">
+            <div class="toolbar" style="flex-wrap:wrap;gap:8px;align-items:flex-end">
+              <input type="search" id="users-q" placeholder="昵称 / 手机 / OpenID" style="min-width:160px" />
+              <input type="tel" id="users-phone" placeholder="手机模糊" maxlength="11" style="width:120px" />
+              <span class="muted" style="font-size:0.8rem;align-self:center">注册从</span>
+              <input type="date" id="users-date-from" />
+              <span class="muted" style="font-size:0.8rem">至</span>
+              <input type="date" id="users-date-to" />
+              <select id="users-account-status" title="账号状态">
+                <option value="">全部状态</option>
+                <option value="active">正常</option>
+                <option value="disabled">已禁用</option>
+              </select>
+              <select id="users-account-flag" title="异常标记">
+                <option value="">全部标记</option>
+                <option value="flagged">已打标</option>
+                <option value="watch">观察</option>
+                <option value="abnormal">异常</option>
+                <option value="spam">垃圾/骚扰</option>
+              </select>
+              <select id="users-activity" title="活跃度">
+                <option value="">全部活跃度</option>
+                <option value="active_30d">近30天有订单或评论</option>
+                <option value="dormant_90d">沉睡（≥90天无互动）</option>
+                <option value="zero_orders">零订单</option>
+                <option value="high_value">高消费（累计实付≥500元）</option>
+              </select>
+              <select id="users-sort" title="排序">
+                <option value="createTime_desc">注册时间↓</option>
+                <option value="lastActive_desc">最近活跃↓</option>
+                <option value="orderCount_desc">订单数↓</option>
+                <option value="spent_desc">累计消费↓</option>
+              </select>
+              <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="btn-users-search">查询</button>
+              <button type="button" class="btn btn-sm btn-ghost" style="width:auto" id="btn-users-reset">重置</button>
+            </div>
+            <div class="toolbar" style="margin-top:10px;flex-wrap:wrap;gap:8px;align-items:center">
+              <input type="tel" id="reg-phone" placeholder="新用户手机号" maxlength="11" />
+              <input type="password" id="reg-password" placeholder="密码≥6位" />
+              <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="btn-quick-register">注册到数据库</button>
+            </div>
+            <p class="toolbar-note">快速注册等价于 <code>POST /api/auth/register-phone-password</code>。</p>
+            <div id="users-loading"><div class="skeleton-line"></div></div>
+            <div id="users-table-wrap" class="hidden">
+              <p id="users-page-info" class="muted" style="font-size:0.85rem;margin:8px 0"></p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>用户</th>
+                      <th>手机</th>
+                      <th>等级</th>
+                      <th>注册时间</th>
+                      <th>活跃度</th>
+                      <th>订单/评论</th>
+                      <th>消费(元)</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-tbody"></tbody>
+                </table>
+              </div>
+              <div class="toolbar" style="margin-top:12px;justify-content:flex-end;gap:8px">
+                <button type="button" class="btn btn-sm btn-ghost" style="width:auto" id="users-prev-page">上一页</button>
+                <button type="button" class="btn btn-sm btn-ghost" style="width:auto" id="users-next-page">下一页</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 影院 -->
+        <section id="view-cinemas" class="view-section">
+          <div class="section-head"><h2>影院管理</h2><p>增删改与小程序一致</p></div>
+          <div class="panel">
+            <div class="toolbar">
+              <input type="search" id="cinema-keyword" placeholder="名称 / 地址 / 城市" />
+              <button type="button" class="btn btn-sm btn-ghost" id="cinema-search">搜索</button>
+              <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="btn-cinema-add">新增影院</button>
+            </div>
+            <div id="cinemas-loading"><div class="skeleton-line"></div></div>
+            <div id="cinemas-table-wrap" class="hidden">
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>名称</th><th>城市</th><th>地址</th><th>起价(元)</th><th>操作</th></tr></thead>
+                  <tbody id="cinemas-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 报表 -->
+        <section id="view-reports" class="view-section">
+          <div class="section-head">
+            <h2>数据报表</h2>
+            <div class="toolbar" style="margin:0">
+              <select id="rep-days">
+                <option value="7">最近 7 天</option>
+                <option value="15">最近 15 天</option>
+                <option value="30">最近 30 天</option>
+              </select>
+              <button type="button" class="btn btn-sm btn-ghost" id="btn-export-csv">导出 CSV（复制）</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div id="reports-loading"><div class="skeleton-line"></div></div>
+            <div id="reports-body" class="hidden">
+              <div id="reports-summary"></div>
+              <div class="section-head" style="margin-top:20px"><h3 style="margin:0;font-size:0.95rem;font-weight:700">趋势</h3></div>
+              <div class="table-wrap" style="margin-bottom:16px">
+                <table class="data-table data-table--stats">
+                  <colgroup>
+                    <col class="col-label" />
+                    <col class="col-num" span="3" />
+                  </colgroup>
+                  <thead><tr><th>日期</th><th class="col-num">订单</th><th class="col-num">收入(元)</th><th class="col-num">人数</th></tr></thead>
+                  <tbody id="rep-trend"></tbody>
+                </table>
+              </div>
+              <div class="section-head"><h3 style="margin:0;font-size:0.95rem;font-weight:700">订单状态</h3></div>
+              <div class="table-wrap" style="margin-bottom:16px">
+                <table class="data-table data-table--stats data-table--2col">
+                  <colgroup>
+                    <col class="col-label" />
+                    <col class="col-num" />
+                  </colgroup>
+                  <thead><tr><th>状态</th><th class="col-num">数量</th></tr></thead>
+                  <tbody id="rep-status"></tbody>
+                </table>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="rep-split">
+                <div>
+                  <div class="section-head"><h3 style="margin:0;font-size:0.95rem;font-weight:700">热门影片</h3></div>
+                  <div class="table-wrap">
+                    <table class="data-table data-table--stats">
+                      <colgroup>
+                        <col class="col-label" />
+                        <col class="col-num" />
+                        <col class="col-num" />
+                      </colgroup>
+                      <thead><tr><th>影片</th><th class="col-num">单</th><th class="col-num">收</th></tr></thead>
+                      <tbody id="rep-movies"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <div class="section-head"><h3 style="margin:0;font-size:0.95rem;font-weight:700">热门影院</h3></div>
+                  <div class="table-wrap">
+                    <table class="data-table data-table--stats">
+                      <colgroup>
+                        <col class="col-label" />
+                        <col class="col-num" />
+                        <col class="col-num" />
+                      </colgroup>
+                      <thead><tr><th>影院</th><th class="col-num">单</th><th class="col-num">收</th></tr></thead>
+                      <tbody id="rep-cinemas"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 订单 -->
+        <section id="view-orders" class="view-section">
+          <div class="section-head"><h2>全站订单</h2><p>按单号、用户、场次、状态检索；异常视图（超时未付 / 待退款审批）；点击行可进行支付核对与人工干预。</p></div>
+          <div class="panel">
+            <div class="toolbar" style="flex-wrap:wrap;gap:10px;align-items:flex-end">
+              <select id="ord-status">
+                <option value="">全部状态</option>
+                <option value="pending">待支付</option>
+                <option value="paid">已支付</option>
+                <option value="used">已使用</option>
+                <option value="cancelled">已取消</option>
+                <option value="refunded">已退款</option>
+              </select>
+              <select id="ord-filter">
+                <option value="">全部记录</option>
+                <option value="abnormal">异常视图</option>
+                <option value="refund_queue">待退款审批</option>
+              </select>
+              <label style="display:flex;flex-direction:column;font-size:0.8rem;gap:4px;color:var(--muted,#666)">订单号
+                <input type="text" id="ord-order-no" placeholder="模糊匹配" style="min-width:140px;padding:8px 10px;border-radius:8px;border:1px solid var(--border,#ddd)" />
+              </label>
+              <label style="display:flex;flex-direction:column;font-size:0.8rem;gap:4px;color:var(--muted,#666)">用户
+                <input type="text" id="ord-user-kw" placeholder="昵称/手机/openid" style="min-width:160px;padding:8px 10px;border-radius:8px;border:1px solid var(--border,#ddd)" />
+              </label>
+              <label style="display:flex;flex-direction:column;font-size:0.8rem;gap:4px;color:var(--muted,#666)">场次 ID
+                <input type="text" id="ord-schedule-id" placeholder="scheduleId" style="min-width:120px;padding:8px 10px;border-radius:8px;border:1px solid var(--border,#ddd)" />
+              </label>
+              <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="orders-search">检索</button>
+              <button type="button" class="btn btn-sm btn-ghost" style="width:auto" id="orders-reset-filters">重置</button>
+            </div>
+            <p id="orders-user-filter-hint" class="toolbar-note hidden" style="margin-top:8px">
+              当前仅显示所选用户的订单。
+              <button type="button" class="btn btn-sm btn-ghost" style="width:auto;margin-left:8px" id="orders-clear-user-filter">清除用户筛选</button>
+            </p>
+            <p id="orders-total-hint" class="toolbar-note" style="margin-top:6px">—</p>
+            <div id="orders-loading"><div class="skeleton-line"></div></div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>时间</th><th>单号</th><th>用户</th><th>影片</th><th>场次</th><th>影院</th><th>金额</th><th>状态</th><th>退款审批</th></tr></thead>
+                <tbody id="orders-tbody"></tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-ghost hidden" style="margin-top:12px;width:100%" id="orders-loadmore">加载更多</button>
+          </div>
+        </section>
+
+        <!-- 管理员账号与安全 -->
+        <section id="view-account" class="view-section">
+          <div class="section-head">
+            <h2>管理员账号与安全</h2>
+            <p>资料与密码修改须校验当前密码；关键操作在 Web 端二次弹窗确认；服务端写入安全审计日志（含 IP、UA、时间）。</p>
+          </div>
+          <div class="panel">
+            <h3 style="margin:0 0 12px;font-size:1rem">基本资料</h3>
+            <div class="field">
+              <label>手机号（脱敏）</label>
+              <div id="adm-me-phone" class="muted" style="padding:8px 0">—</div>
+            </div>
+            <div class="field">
+              <label for="adm-me-nick">昵称</label>
+              <input id="adm-me-nick" maxlength="32" autocomplete="nickname" />
+            </div>
+            <div class="field">
+              <label for="adm-me-avatar">头像 URL</label>
+              <input id="adm-me-avatar" type="url" placeholder="https://..." />
+            </div>
+            <div class="field">
+              <label for="adm-me-profile-cpwd">当前密码（二次确认）</label>
+              <input id="adm-me-profile-cpwd" type="password" autocomplete="current-password" />
+            </div>
+            <button type="button" class="btn btn-primary" style="width:auto;margin-top:8px" id="btn-adm-me-save">保存资料</button>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <h3 style="margin:0 0 12px;font-size:1rem">修改登录密码</h3>
+            <div class="field">
+              <label for="adm-me-cpwd">当前密码</label>
+              <input id="adm-me-cpwd" type="password" autocomplete="current-password" />
+            </div>
+            <div class="field">
+              <label for="adm-me-newpwd">新密码</label>
+              <input id="adm-me-newpwd" type="password" autocomplete="new-password" />
+            </div>
+            <div class="field">
+              <label for="adm-me-newpwd2">确认新密码</label>
+              <input id="adm-me-newpwd2" type="password" autocomplete="new-password" />
+            </div>
+            <button type="button" class="btn btn-ghost" style="width:auto;border-color:#ff5f16;color:#c62828" id="btn-adm-me-pwd">修改密码</button>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <h3 style="margin:0 0 12px;font-size:1rem">安全操作日志</h3>
+            <div class="table-wrap" style="max-height:min(50vh,480px);overflow:auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>时间</th>
+                    <th>类别</th>
+                    <th>动作</th>
+                    <th>摘要</th>
+                    <th>IP</th>
+                  </tr>
+                </thead>
+                <tbody id="adm-me-log-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- 确认 -->
+  <div id="modal-confirm" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-head" id="modal-confirm-title">确认</div>
+      <div class="modal-body" id="modal-confirm-text"></div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="modal-confirm-cancel">取消</button>
+        <button type="button" class="btn btn-primary" style="width:auto" id="modal-confirm-ok">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 订单人工干预 -->
+  <div id="modal-order" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box wide">
+      <div class="modal-head">订单详情与操作</div>
+      <div class="modal-body" id="modal-order-body" style="max-height:min(56vh,480px);overflow:auto;font-size:0.9rem"></div>
+      <div class="modal-foot" style="flex-direction:column;align-items:stretch;gap:10px">
+        <label class="muted" style="font-size:0.8rem">操作备注（写入审计/退款说明，可选）</label>
+        <textarea id="modal-order-note" rows="2" maxlength="255" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border,#ddd);resize:vertical"></textarea>
+        <div id="modal-order-actions" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+        <button type="button" class="btn btn-ghost" id="modal-order-close" style="width:100%">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 影厅列表 -->
+  <div id="modal-halls-list" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box wide">
+      <div class="modal-head" id="halls-modal-title">影厅管理</div>
+      <div class="modal-body">
+        <p class="muted" style="margin:0 0 12px;font-size:0.85rem">在此维护各影厅名称、类型与座位规模；保存后新场次将按影厅配置在访问时自动生成。</p>
+        <div class="toolbar" style="margin-bottom:10px">
+          <button type="button" class="btn btn-sm btn-primary" style="width:auto" id="btn-hall-add">新增影厅</button>
+        </div>
+        <div class="table-wrap" style="max-height:min(50vh,420px);overflow:auto">
+          <table class="data-table">
+            <thead><tr><th>名称</th><th>类型</th><th>座位(行×列)</th><th>排序</th><th>操作</th></tr></thead>
+            <tbody id="halls-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="halls-modal-close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 影厅表单 -->
+  <div id="modal-hall-form" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box wide">
+      <div class="modal-head" id="hall-form-title">影厅</div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div><label>名称</label><input id="f-hall-name" placeholder="如 5号厅" /></div>
+          <div><label>厅类型</label><input id="f-hall-type" placeholder="IMAX / 3D / 普通厅" /></div>
+          <div><label>座位行数</label><input id="f-hall-rows" type="number" min="4" max="30" /></div>
+          <div><label>座位列数</label><input id="f-hall-cols" type="number" min="6" max="30" /></div>
+          <div><label>排序</label><input id="f-hall-order" type="number" title="数字越小越靠前" /></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="hall-form-cancel">取消</button>
+        <button type="button" class="btn btn-primary" style="width:auto" id="hall-form-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 影院表单 -->
+  <div id="modal-cinema" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box wide">
+      <div class="modal-head" id="cinema-modal-title">影院</div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div><label>名称</label><input id="f-cinema-name" /></div>
+          <div><label>城市</label><input id="f-cinema-city" /></div>
+          <div style="grid-column:1/-1"><label>地址</label><input id="f-cinema-address" /></div>
+          <div><label>电话</label><input id="f-cinema-phone" /></div>
+          <div><label>最低票价(元)</label><input id="f-cinema-price" type="number" step="0.1" /></div>
+          <div><label>纬度</label><input id="f-cinema-lat" /></div>
+          <div><label>经度</label><input id="f-cinema-lng" /></div>
+          <div style="grid-column:1/-1"><label>标签（逗号分隔）</label><input id="f-cinema-tags" placeholder="IMAX,4K" /></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="cinema-modal-cancel">取消</button>
+        <button type="button" class="btn btn-primary" style="width:auto" id="cinema-modal-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户详情 / 行为概览 -->
+  <div id="modal-user-detail" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box wide">
+      <div class="modal-head" id="user-detail-title">用户详情</div>
+      <div class="modal-body" id="user-detail-body" style="max-height:min(72vh,640px);overflow:auto">
+        <p class="muted" style="margin:0">加载中…</p>
+      </div>
+      <div class="modal-foot" style="flex-wrap:wrap;gap:8px;justify-content:flex-end">
+        <button type="button" class="btn btn-ghost" style="width:auto" id="user-detail-btn-orders">在订单管理中查看</button>
+        <button type="button" class="btn btn-ghost" id="user-detail-close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="/admin-web/app.js" defer></script>
+</body>
+</html>

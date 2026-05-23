@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="balance-card">
+    <view class="balance-label">当前积分</view>
+    <view class="balance-num">{{balance}}</view>
+    <view class="balance-tip">{{useBackend ? '数据来自服务端，下拉可刷新；积分仅由订单/签到/活动等事件增减' : '当前非仅后端模式，以下为演示数据'}}</view>
+  </view>
+
+  <view class="card" wx:if="{{useBackend}}">
+    <view class="card-title">赚积分</view>
+    <view class="row-btns">
+      <view class="btn btn-primary" bindtap="onCheckIn">每日签到</view>
+    </view>
+    <view class="card-title" style="margin-top:24rpx">活动领取（演示）</view>
+    <view class="row-btns">
+      <view class="btn" data-key="welcome_task" bindtap="onActivity">新手任务 +50</view>
+      <view class="btn" data-key="festival_bonus" bindtap="onActivity">节日活动 +30</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">积分规则</view>
+    <view class="rule-line" wx:for="{{rules}}" wx:key="*this">{{item}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">积分流水</view>
+    <view wx:if="{{!logItems.length}}" class="empty">暂无流水</view>
+    <view class="log-item" wx:for="{{logItems}}" wx:key="id">
+      <view class="log-top">
+        <text class="log-delta {{item.delta >= 0 ? 'log-delta-up' : 'log-delta-down'}}">{{item.delta >= 0 ? '+' : ''}}{{item.delta}}</text>
+        <text style="font-size:24rpx;color:#888">余 {{item.balanceAfter}}</text>
+      </view>
+      <view class="log-meta">{{item.remark || item.sourceType}} · {{item.createTime}}</view>
+    </view>
+  </view>
+</view>

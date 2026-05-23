@@ -1,0 +1,118 @@
+.page {
+  min-height: 100vh;
+  padding: 24rpx 24rpx 48rpx;
+  box-sizing: border-box;
+  background: #f5f6f8;
+}
+
+.balance-card {
+  background: linear-gradient(135deg, #ff7a00 0%, #ff4d22 100%);
+  border-radius: 20rpx;
+  padding: 36rpx 28rpx;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.balance-label {
+  font-size: 26rpx;
+  opacity: 0.92;
+}
+
+.balance-num {
+  font-size: 56rpx;
+  font-weight: 800;
+  margin-top: 8rpx;
+}
+
+.balance-tip {
+  font-size: 22rpx;
+  margin-top: 12rpx;
+  opacity: 0.88;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.row-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.btn {
+  flex: 1;
+  min-width: 200rpx;
+  text-align: center;
+  padding: 20rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  background: #fff5f0;
+  color: #ff5f16;
+  border: 2rpx solid rgba(255, 95, 22, 0.35);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff7a00 0%, #ff4d22 100%);
+  color: #fff;
+  border: none;
+}
+
+.log-item {
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.log-item:last-child {
+  border-bottom: none;
+}
+
+.log-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.log-delta {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.log-delta-up {
+  color: #ff5f16;
+}
+
+.log-delta-down {
+  color: #c62828;
+}
+
+.log-meta {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.rule-line {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.55;
+  margin-bottom: 12rpx;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  padding: 40rpx 0;
+}

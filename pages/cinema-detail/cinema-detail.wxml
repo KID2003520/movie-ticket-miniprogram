@@ -1,21 +1,19 @@
-<view class="container">
+<view class="container cinema-detail-page">
   <view wx:if="{{cinema}}" class="detail-wrapper">
-    <view class="cinema-header">
+    <view class="cinema-card">
       <text class="cinema-name">{{cinema.name}}</text>
       <text class="cinema-address">{{cinema.address}}</text>
       <view class="cinema-tags">
         <text class="tag" wx:for="{{cinema.tags}}" wx:key="index">{{item}}</text>
       </view>
-      <view class="cinema-phone">
-        <text>📞 {{cinema.phone}}</text>
-      </view>
-      <view class="cinema-location" bindtap="onLocationTap">
-        <text>📍 查看地图</text>
+      <view class="cinema-actions">
+        <text class="action" bindtap="onLocationTap">查看地图</text>
+        <text class="action">电话 {{cinema.phone}}</text>
       </view>
     </view>
 
     <view class="date-bar">
-      <scroll-view scroll-x class="date-scroll">
+      <scroll-view scroll-x class="date-scroll" show-scrollbar="{{false}}">
         <view class="date-list">
           <view class="date-item {{currentDateIndex === index ? 'active' : ''}}" wx:for="{{dateList}}" wx:key="fullDate" bindtap="onDateChange" data-index="{{index}}">
             <text class="date-text">{{item.date}}</text>
@@ -25,25 +23,43 @@
       </scroll-view>
     </view>
 
+    <view class="movie-bar" wx:if="{{movies.length>0}}">
+      <scroll-view scroll-x class="movie-scroll" show-scrollbar="{{false}}">
+        <view class="movie-list">
+          <view
+            class="movie-item {{currentMovieId===item.movieId ? 'active' : ''}}"
+            wx:for="{{movies}}"
+            wx:key="movieId"
+            data-movieid="{{item.movieId}}"
+            bindtap="onMovieChange"
+          >
+            <image class="movie-poster" src="{{item.moviePoster}}" mode="aspectFill"></image>
+            <text class="movie-title">{{item.movieTitle}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
     <view class="schedule-list">
       <view class="schedule-item" wx:for="{{schedules}}" wx:key="_id" bindtap="onScheduleTap" data-id="{{item._id}}">
         <view class="schedule-time">
           <text class="start-time">{{item.startTime}}</text>
-          <text class="end-time">{{item.endTime}}散场</text>
+          <text class="end-time">{{item.endTime}} 散场</text>
         </view>
         <view class="schedule-info">
           <text class="hall-name">{{item.hallName}}</text>
           <text class="hall-type">{{item.hallType}}</text>
         </view>
         <view class="schedule-price">
-          <text class="price">{{item.price}}元</text>
-          <view class="buy-btn">选座购票</view>
+          <text class="price"><text class="symbol">¥</text>{{item.price}}</text>
+          <view class="buy-btn">购票</view>
         </view>
+      </view>
+      <view wx:if="{{!loading && schedules.length===0}}" class="empty-wrap">
+        <text class="empty-text">当日暂无场次，已为你自动生成，稍后下拉重试</text>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
-  </view>
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
 </view>

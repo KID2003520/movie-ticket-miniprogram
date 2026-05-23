@@ -1,0 +1,59 @@
+<scroll-view class="wrap" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="card">
+    <text class="h">积分规则（数值入库，购票/签到即时生效）</text>
+    <view class="row">
+      <text class="lab">每 100 分实付得积分</text>
+      <input class="inp sm" type="number" value="{{rulePer}}" bindinput="onRulePer" />
+    </view>
+    <view class="row">
+      <text class="lab">每日签到积分</text>
+      <input class="inp sm" type="number" value="{{ruleCin}}" bindinput="onRuleCin" />
+    </view>
+    <button class="btn primary" size="mini" bindtap="onSaveRules">保存规则</button>
+    <view class="rules" wx:if="{{ruleLines.length}}">
+      <text class="rl" wx:for="{{ruleLines}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="h">手工调整（写入流水 + 安全审计）</text>
+    <input class="inp" placeholder="目标用户 openid" value="{{adjTarget}}" bindinput="onAdjTarget" />
+    <input class="inp" type="number" placeholder="变动积分（可负）" value="{{adjDelta}}" bindinput="onAdjDelta" />
+    <input class="inp" placeholder="原因（必填）" value="{{adjReason}}" bindinput="onAdjReason" />
+    <view class="row2">
+      <text class="lab2">大额扣减确认（单笔扣减超 500 分时须打开）</text>
+      <switch checked="{{adjRisk}}" bindchange="onAdjRiskSwitch" />
+    </view>
+    <button class="btn primary" size="mini" bindtap="onAdjust">提交调整</button>
+  </view>
+
+  <view class="card">
+    <text class="h">批量发放（最多 150 条，每条独立流水）</text>
+    <input class="inp" placeholder="批次说明 batchReason（必填）" value="{{bulkBatch}}" bindinput="onBulkBatch" />
+    <textarea
+      class="ta"
+      placeholder='items JSON，例：[{"targetOpenid":"oXXX","delta":100,"reason":"活动A"}]'
+      value="{{bulkJson}}"
+      bindinput="onBulkJson"
+    />
+    <view class="row2">
+      <text class="lab2">批量含大额扣减时须打开</text>
+      <switch checked="{{bulkRisk}}" bindchange="onBulkRiskSwitch" />
+    </view>
+    <button class="btn ghost" size="mini" bindtap="onBulkSubmit">执行批量</button>
+  </view>
+
+  <view class="card">
+    <text class="h">流水核查（全站，管理员）</text>
+    <input class="inp" placeholder="筛选用户 openid（可空）" value="{{logTarget}}" bindinput="onLogTarget" />
+    <input class="inp" placeholder="来源类型 sourceType（可空，如 manual_adjust）" value="{{logSource}}" bindinput="onLogSource" />
+    <button class="btn ghost" size="mini" bindtap="onLogSearch">查询</button>
+    <view class="log-item" wx:for="{{logItems}}" wx:key="id">
+      <text class="log-t">{{item.createTime}} · {{item.sourceType}}</text>
+      <text class="log-m">{{item.userNick}} {{item.delta > 0 ? '+' : ''}}{{item.delta}} → 余 {{item.balanceAfter}}</text>
+      <text class="log-s" wx:if="{{item.operatorOpenid}}">操作者 {{item.operatorOpenid}}</text>
+      <text class="log-s">{{item.remark}}</text>
+    </view>
+    <button wx:if="{{logHasMore}}" class="btn ghost wide" size="mini" bindtap="onLogMore">下一页</button>
+  </view>
+</scroll-view>

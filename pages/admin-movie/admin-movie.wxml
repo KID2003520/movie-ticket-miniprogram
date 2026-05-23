@@ -21,7 +21,7 @@
       </picker>
     </view>
     <view class="search-row">
-      <input class="search-input" placeholder="搜索电影名称" value="{{keyword}}" bindinput="onSearchInput" />
+      <input class="search-input" placeholder="搜索电影名称" value="{{keyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearch" />
       <view class="search-btn" bindtap="onSearch">搜索</view>
     </view>
   </view>

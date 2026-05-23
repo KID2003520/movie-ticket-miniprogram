@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="640" viewBox="0 0 920 640">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#e2e8f0"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+    </filter>
+    <style type="text/css"><![CDATA[
+      .title { font-family: "Microsoft YaHei UI", "PingFang SC", "SimHei", sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif; font-size: 12px; fill: #64748b; }
+      .layer { font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif; font-size: 13px; font-weight: 600; fill: #334155; }
+      .box { font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif; font-size: 11px; fill: #1e293b; }
+      .small { font-size: 10px; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrowhead); }
+      .arrow-dashed { stroke: #94a3b8; stroke-width: 1.4; stroke-dasharray: 6 4; fill: none; marker-end: url(#arrowhead-soft); }
+    ]]></style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#64748b"/>
+    </marker>
+    <marker id="arrowhead-soft" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+
+  <text x="460" y="42" text-anchor="middle" class="title">电影票预订系统 - 总体架构</text>
+  <text x="460" y="64" text-anchor="middle" class="subtitle">微信小程序 / Node.js 服务端 / MySQL / 第三方接口（TMDB、支付宝等）</text>
+
+  <rect x="40" y="88" width="840" height="110" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="60" y="112" class="layer">用户层</text>
+  <rect x="70" y="128" width="200" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="170" y="152" text-anchor="middle" class="box">微信小程序客户端</text>
+  <text x="170" y="168" text-anchor="middle" class="small">购票、选座、订单、支付入口</text>
+  <rect x="320" y="128" width="200" height="56" rx="8" fill="#e0e7ff" stroke="#6366f1"/>
+  <text x="420" y="152" text-anchor="middle" class="box">浏览器管理后台</text>
+  <text x="420" y="168" text-anchor="middle" class="small">/admin-web 静态管理页</text>
+  <rect x="570" y="128" width="280" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="710" y="152" text-anchor="middle" class="box">可选：微信云开发</text>
+  <text x="710" y="168" text-anchor="middle" class="small">USE_BACKEND_ONLY=false 时：云函数、云数据库、云存储</text>
+
+  <rect x="40" y="228" width="840" height="160" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="60" y="252" class="layer">应用服务层（Express）</text>
+  <rect x="70" y="268" width="780" height="44" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="460" y="287" text-anchor="middle" class="box">REST API / HTTPS/HTTP / CORS / 业务编排</text>
+  <text x="460" y="302" text-anchor="middle" class="small">路由：电影、影院、排期、座位、订单、支付；TMDB 同步；海报代理</text>
+  <rect x="70" y="324" width="240" height="50" rx="8" fill="#fff7ed" stroke="#f97316"/>
+  <text x="190" y="348" text-anchor="middle" class="box">订单与支付</text>
+  <text x="190" y="362" text-anchor="middle" class="small">支付宝 SDK、回调、mock 支付</text>
+  <rect x="335" y="324" width="240" height="50" rx="8" fill="#fef3c7" stroke="#eab308"/>
+  <text x="455" y="348" text-anchor="middle" class="box">内容与同步</text>
+  <text x="455" y="362" text-anchor="middle" class="small">TMDB 导入、影院样本、扩展接口</text>
+  <rect x="600" y="324" width="250" height="50" rx="8" fill="#fce7f3" stroke="#db2777"/>
+  <text x="725" y="348" text-anchor="middle" class="box">运营与扩展</text>
+  <text x="725" y="362" text-anchor="middle" class="small">优惠券、报表等扩展模块</text>
+
+  <rect x="40" y="418" width="380" height="120" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="60" y="442" class="layer">数据持久层</text>
+  <rect x="70" y="458" width="320" height="66" rx="8" fill="#f0fdf4" stroke="#22c55e"/>
+  <text x="230" y="486" text-anchor="middle" class="box">MySQL</text>
+  <text x="230" y="504" text-anchor="middle" class="small">用户、电影、影院、排期、座位、订单、评论、收藏等</text>
+
+  <rect x="440" y="418" width="440" height="120" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="460" y="442" class="layer">外部服务</text>
+  <rect x="460" y="458" width="120" height="52" rx="8" fill="#eff6ff" stroke="#2563eb"/>
+  <text x="520" y="482" text-anchor="middle" class="box">TMDB API</text>
+  <text x="520" y="498" text-anchor="middle" class="small">影片元数据</text>
+  <rect x="595" y="458" width="120" height="52" rx="8" fill="#fff1f2" stroke="#e11d48"/>
+  <text x="655" y="482" text-anchor="middle" class="box">支付宝</text>
+  <text x="655" y="498" text-anchor="middle" class="small">支付收银台</text>
+  <rect x="730" y="458" width="130" height="52" rx="8" fill="#f8fafc" stroke="#64748b"/>
+  <text x="795" y="482" text-anchor="middle" class="box">腾讯地图等</text>
+  <text x="795" y="498" text-anchor="middle" class="small">定位逆地理（可选）</text>
+
+  <path class="arrow" d="M 170 184 L 170 228"/>
+  <path class="arrow" d="M 420 184 L 420 228"/>
+  <path class="arrow-dashed" d="M 710 184 L 710 228"/>
+  <text x="185" y="210" class="small">HTTPS</text>
+  <text x="435" y="210" class="small">HTTP(S)</text>
+
+  <path class="arrow" d="M 230 388 L 230 418"/>
+  <path class="arrow" d="M 455 388 L 280 418"/>
+  <path class="arrow" d="M 725 388 L 320 418"/>
+
+  <path class="arrow" d="M 455 324 L 520 418"/>
+  <path class="arrow" d="M 190 324 L 655 458"/>
+  <path class="arrow" d="M 725 324 L 795 458"/>
+
+  <rect x="40" y="566" width="840" height="54" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="60" y="592" class="small">说明：默认 USE_BACKEND_ONLY=true，小程序通过 BACKEND_BASE_URL 访问 backend（Express）；虚线表示可选云开发路径。</text>
+  <text x="60" y="608" class="small">本文件为 UTF-8 编码的 SVG，可用浏览器预览；插入 WPS 若异常请导出为 PNG。</text>
+</svg>

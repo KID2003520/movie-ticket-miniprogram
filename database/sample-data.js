@@ -164,7 +164,18 @@ const cinemas = [
     minPrice: 3400,
     distance: 1.8,
     facilities: ["免费停车", "情侣座"]
-  }
+  },
+  { name: "金逸影城（勒泰中心店）", address: "河北省石家庄市长安区中山东路39号勒泰中心", phone: "0311-66881234", latitude: 38.0433, longitude: 114.5146, city: "石家庄", district: "长安区", tags: ["IMAX", "激光厅"], minPrice: 3400, distance: 0, facilities: [] },
+  { name: "万达影城（路南万达广场店）", address: "河北省唐山市路南区新华东道万达广场", phone: "0315-2828001", latitude: 39.6312, longitude: 118.1805, city: "唐山", district: "路南区", tags: ["IMAX", "杜比全景声"], minPrice: 3600, distance: 0, facilities: [] },
+  { name: "CGV影城（乐都汇店）", address: "河北省秦皇岛市海港区河北大街中段乐都汇", phone: "0335-5908800", latitude: 39.9354, longitude: 119.6005, city: "秦皇岛", district: "海港区", tags: ["4DX", "巨幕"], minPrice: 3300, distance: 0, facilities: [] },
+  { name: "横店电影城（新世纪店）", address: "河北省邯郸市丛台区中华北大街新世纪中心", phone: "0310-3015566", latitude: 36.6257, longitude: 114.5391, city: "邯郸", district: "丛台区", tags: ["激光厅", "VIP厅"], minPrice: 3200, distance: 0, facilities: [] },
+  { name: "金棕榈影城（逗号立方店）", address: "河北省邢台市襄都区中兴东大街逗号立方购物公园", phone: "0319-2020666", latitude: 37.0682, longitude: 114.5049, city: "邢台", district: "襄都区", tags: ["杜比全景声"], minPrice: 3100, distance: 0, facilities: [] },
+  { name: "UME影城（万博广场店）", address: "河北省保定市竞秀区朝阳北大街万博广场", phone: "0312-3355888", latitude: 38.8671, longitude: 115.4845, city: "保定", district: "竞秀区", tags: ["IMAX", "情侣座"], minPrice: 3500, distance: 0, facilities: [] },
+  { name: "博纳国际影城（银座店）", address: "河北省张家口市桥东区胜利北路银座商城", phone: "0313-2012345", latitude: 40.8119, longitude: 114.8863, city: "张家口", district: "桥东区", tags: ["巨幕", "普通厅"], minPrice: 3000, distance: 0, facilities: [] },
+  { name: "万达影城（双桥万达广场店）", address: "河北省承德市双桥区新华路承德万达广场", phone: "0314-2567888", latitude: 40.9515, longitude: 117.9633, city: "承德", district: "双桥区", tags: ["IMAX", "儿童厅"], minPrice: 3300, distance: 0, facilities: [] },
+  { name: "金逸影城（吾悦广场店）", address: "河北省沧州市运河区吉林大道吾悦广场", phone: "0317-5299666", latitude: 38.3045, longitude: 116.8388, city: "沧州", district: "运河区", tags: ["激光厅", "餐饮"], minPrice: 3200, distance: 0, facilities: [] },
+  { name: "CGV影城（广阳万达广场店）", address: "河北省廊坊市广阳区新华路万达广场", phone: "0316-5210888", latitude: 39.538, longitude: 116.6838, city: "廊坊", district: "广阳区", tags: ["ScreenX", "4DX"], minPrice: 3400, distance: 0, facilities: [] },
+  { name: "中影国际影城（怡然城店）", address: "河北省衡水市桃城区人民西路怡然城", phone: "0318-6667788", latitude: 37.735, longitude: 115.7019, city: "衡水", district: "桃城区", tags: ["普通厅", "情侣座"], minPrice: 2900, distance: 0, facilities: [] }
 ];
 
 module.exports = {

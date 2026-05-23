@@ -1,0 +1,44 @@
+%% 通用 flowchart，兼容不支持 useCaseDiagram 的渲染器
+
+flowchart LR
+    Actor((管理员))
+
+    subgraph SYS["管理员功能模块"]
+        direction TB
+        A1([数据报表与统计])
+        A2([影片信息维护])
+        A3([影片批量导入与同步])
+        A4([影院信息管理])
+        A5([影厅与座位模板])
+        A6([用户账号管理])
+        A7([订单查询与监管])
+        A8([优惠券模板管理])
+        A9([公告管理])
+        A10([排期与场次监管])
+        A11([操作日志查看])
+        Login([登录])
+    end
+
+    Actor --> A1
+    Actor --> A2
+    Actor --> A3
+    Actor --> A4
+    Actor --> A5
+    Actor --> A6
+    Actor --> A7
+    Actor --> A8
+    Actor --> A9
+    Actor --> A10
+    Actor --> A11
+
+    A1 -.->|include| Login
+    A2 -.->|include| Login
+    A3 -.->|include| Login
+    A4 -.->|include| Login
+    A5 -.->|include| Login
+    A6 -.->|include| Login
+    A7 -.->|include| Login
+    A8 -.->|include| Login
+    A9 -.->|include| Login
+    A10 -.->|include| Login
+    A11 -.->|include| Login

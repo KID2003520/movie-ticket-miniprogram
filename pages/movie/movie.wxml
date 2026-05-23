@@ -1,42 +1,42 @@
-<view class="container">
-  <view class="tab-bar">
-    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{0}}">
+<view class="container movie-page tab-page-safe">
+  <view class="movie-tab-bar">
+    <view class="movie-tab {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{0}}">
       <text>{{tabs[0]}}</text>
     </view>
-    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{1}}">
+    <view class="movie-tab {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-index="{{1}}">
       <text>{{tabs[1]}}</text>
     </view>
   </view>
 
   <view class="movie-list">
-    <view class="movie-item" wx:for="{{movies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
-      <image src="{{item.poster}}" mode="aspectFill" class="movie-poster"></image>
-      <view class="movie-content">
-        <view class="movie-header">
-          <text class="movie-title">{{item.title}}</text>
-          <view class="movie-rating">
-            <text class="rating-value">{{item.rating}}</text>
-            <text class="rating-label">分</text>
-          </view>
+    <view class="movie-row" wx:for="{{movies}}" wx:key="_id" bindtap="onMovieTap" data-id="{{item._id}}">
+      <image wx:if="{{item.poster}}" src="{{item.poster}}" mode="aspectFill" class="row-poster" binderror="onPosterError" data-id="{{item._id}}"></image>
+      <view wx:else class="row-poster row-poster-placeholder">暂无海报</view>
+      <view class="row-main">
+        <view class="row-title-wrap">
+          <text class="row-title">{{item.title}}</text>
+          <text class="row-tag {{item.status === 'coming' ? 'coming' : ''}}">{{item.status === 'showing' ? '热映' : '待映'}}</text>
         </view>
-        <view class="movie-meta">
-          <text class="meta-item">导演: {{item.director}}</text>
-          <text class="meta-item">主演: {{item.actors}}</text>
-          <text class="meta-item">{{item.genre}} | {{item.duration}}分钟</text>
-        </view>
-        <view class="movie-footer">
-          <text class="movie-price">{{item.price}}元起</text>
-          <view class="buy-btn" catchtap="onBuyTap" data-id="{{item._id}}">购票</view>
+        <text class="row-score" wx:if="{{item.status === 'showing'}}">{{item.rating}} 分</text>
+        <text class="row-meta">{{item.genre}} | {{item.duration || '--'}}分钟</text>
+        <text class="row-meta">导演：{{item.director || '暂无'}}</text>
+        <text class="row-meta">主演：{{item.actors || '暂无'}}</text>
+      </view>
+      <view class="row-right">
+        <text class="row-price" wx:if="{{item.status === 'showing'}}"><text class="price-symbol">¥</text>{{item.price}}起</text>
+        <view class="row-btn" catchtap="onBuyTap" data-id="{{item._id}}">
+          <text>{{item.status === 'showing' ? '购票' : '想看'}}</text>
         </view>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{!loading && movies.length === 0}}" class="empty-state">
-    <text>暂无电影数据</text>
+  <view wx:if="{{!loading && movies.length === 0}}" class="empty-wrap">
+    <text class="empty-text">{{currentTab === 1 ? '暂无即将上映，请下拉刷新' : '暂无电影数据'}}</text>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
   </view>
 </view>

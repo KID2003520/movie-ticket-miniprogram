@@ -1,0 +1,12 @@
+.wrap {
+  padding: 40rpx;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tip {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+}

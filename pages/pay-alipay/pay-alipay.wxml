@@ -1,0 +1,4 @@
+<view class="wrap" wx:if="{{!url}}">
+  <text class="tip">缺少支付地址，请返回重试。</text>
+</view>
+<web-view wx:if="{{url}}" src="{{url}}"></web-view>

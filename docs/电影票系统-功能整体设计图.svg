@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720">
+  <defs>
+    <linearGradient id="bgf" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#e8eef5"/>
+    </linearGradient>
+    <filter id="sh" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bgf)"/>
+
+  <text x="480" y="44" text-anchor="middle" font-family="Microsoft YaHei UI, PingFang SC, sans-serif"
+        font-size="22" font-weight="700" fill="#0f172a">电影票预订系统 - 功能整体设计</text>
+  <text x="480" y="68" text-anchor="middle" font-family="Microsoft YaHei UI, PingFang SC, sans-serif"
+        font-size="12" fill="#64748b">小程序业务模块划分（对应 TabBar 与页面路由）</text>
+
+  <rect x="24" y="84" width="912" height="540" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#sh)"/>
+
+  <!-- row: four pillars -->
+  <rect x="40" y="100" width="210" height="168" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.4"/>
+  <text x="52" y="122" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="12" font-weight="600" fill="#0f172a">门户与内容</text>
+  <text x="52" y="138" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">首页推荐、轮播</text>
+  <text x="52" y="152" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">电影列表（热映/即将）</text>
+  <text x="52" y="166" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">电影详情、评分与剧情</text>
+  <text x="52" y="180" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">关键词搜索</text>
+  <rect x="265" y="100" width="210" height="168" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.4"/>
+  <text x="277" y="122" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="12" font-weight="600" fill="#0f172a">影院与购票</text>
+  <text x="277" y="138" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">影院列表、距离/城市</text>
+  <text x="277" y="152" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">影院详情、场次排期</text>
+  <text x="277" y="166" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">可视化选座、座位锁定</text>
+  <text x="277" y="180" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">场次详情查询</text>
+  <rect x="490" y="100" width="210" height="168" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="1.4"/>
+  <text x="502" y="122" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="12" font-weight="600" fill="#0f172a">订单与支付</text>
+  <text x="502" y="138" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">创建订单、待支付倒计时</text>
+  <text x="502" y="152" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">订单列表、订单详情</text>
+  <text x="502" y="166" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">支付宝支付 / 模拟支付</text>
+  <text x="502" y="180" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">退款、取消、删除订单</text>
+  <rect x="715" y="100" width="210" height="168" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="1.4"/>
+  <text x="727" y="122" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="12" font-weight="600" fill="#0f172a">用户与权益</text>
+  <text x="727" y="138" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">手机号注册、登录</text>
+  <text x="727" y="152" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">个人中心、账号信息</text>
+  <text x="727" y="166" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">我的收藏</text>
+  <text x="727" y="180" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">优惠券商城与我的卡券</text>
+  <text x="727" y="194" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="9.5" fill="#334155">在线客服、设置</text>
+
+  <!-- arrows: browsing flow -->
+  <path d="M 250 166 L 265 166" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <path d="M 475 166 L 490 166" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <path d="M 700 166 L 715 166" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <text x="252" y="158" font-size="9" fill="#64748b">浏览</text>
+  <text x="478" y="158" font-size="9" fill="#64748b">下单</text>
+  <text x="702" y="158" font-size="9" fill="#64748b">账户</text>
+
+  <!-- admin strip -->
+  <text x="48" y="300" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="13" font-weight="600" fill="#334155">运营管理（管理员）</text>
+  <rect x="40" y="312" width="885" height="92" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.4"/>
+  <text x="56" y="338" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 数据报表与统计</text>
+  <text x="56" y="356" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 影片维护、TMDB 导入</text>
+  <text x="56" y="374" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 影院/影厅管理</text>
+  <text x="320" y="338" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 用户管理</text>
+  <text x="320" y="356" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 浏览器管理后台 admin-web</text>
+  <text x="320" y="374" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 小程序内 admin-* 页面与运营维护流程对齐</text>
+
+  <!-- support -->
+  <text x="48" y="432" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="13" font-weight="600" fill="#334155">技术与外部协同</text>
+  <rect x="40" y="444" width="885" height="72" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.4"/>
+  <text x="56" y="468" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• Express REST API（与小程序对接）</text>
+  <text x="56" y="486" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• MySQL 数据持久化</text>
+  <text x="480" y="468" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• TMDB 元数据同步、海报代理</text>
+  <text x="480" y="486" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" fill="#334155">• 支付宝 SDK、支付回调</text>
+
+  <!-- legend -->
+  <rect x="40" y="544" width="885" height="64" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="56" y="572" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10" fill="#475569">
+    说明：上方四区为 C 端用户主流程（首页→电影→影院→我的）；中部为运营管理；底部为后端与第三方协同。默认 USE_BACKEND_ONLY=true 走 Express + MySQL。
+  </text>
+  <text x="56" y="592" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10" fill="#475569">
+    重生成： python movie-ticket-miniprogram/docs/_write_functional_design_svg.py
+  </text>
+</svg>

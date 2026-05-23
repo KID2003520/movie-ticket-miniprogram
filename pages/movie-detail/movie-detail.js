@@ -1,106 +1,256 @@
 const app = getApp();
+const util = require('../../utils/util.js');
+const backendApi = require('../../utils/backendApi.js');
+const { normalizeMovie } = require('../../utils/normalizeMovie.js');
 
 Page({
   data: {
     movie: null,
+    movieView: null,
+    gallery: [],
     comments: [],
     isCollected: false,
     loading: true,
     commentText: '',
     commentRating: 5,
-    showCommentInput: false
+    showCommentInput: false,
+    enriching: false
   },
 
   onLoad: function (options) {
-    const { id } = options;
-    this.movieId = id;
-    this.loadMovieDetail();
-    this.loadComments();
-    this.checkCollection();
+    if (options.id) {
+      this.movieId = options.id;
+      this.loadMovieDetail();
+      this.loadComments();
+      this.checkCollection();
+    }
   },
 
   loadMovieDetail: function () {
-    const movies = {
-      '1': { _id: '1', title: '流浪地球2', poster: 'https://picsum.photos/300/420?random=41', rating: 8.3, genre: '科幻/冒险', duration: 173, director: '郭帆', actors: '吴京,刘德华,李雪健', description: '太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园。然而宇宙之路危机四伏，为了拯救地球，流浪地球时代的年轻人再次挺身而出，展开争分夺秒的生死之战。', releaseDate: '2023-01-22', price: 35, status: 'showing', hot: 1000 },
-      '2': { _id: '2', title: '满江红', poster: 'https://picsum.photos/300/420?random=42', rating: 7.8, genre: '悬疑/喜剧', duration: 159, director: '张艺谋', actors: '沈腾,易烊千玺,张译', description: '南宋绍兴年间，岳飞死后四年，秦桧率兵与金国会谈。会谈前夜，金国使者死在宰相驻地，所携密信也不翼而飞。', releaseDate: '2023-01-22', price: 32, status: 'showing', hot: 950 },
-      '3': { _id: '3', title: '熊出没·伴我熊芯', poster: 'https://picsum.photos/300/420?random=43', rating: 7.5, genre: '动画/冒险', duration: 97, director: '林汇达', actors: '张伟,张秉君,谭笑', description: '熊大熊二和光头强发现了一个神秘的机器人，这个机器人似乎与熊妈妈的失踪有着千丝万缕的联系。', releaseDate: '2023-01-22', price: 28, status: 'showing', hot: 800 },
-      '4': { _id: '4', title: '无名', poster: 'https://picsum.photos/300/420?random=44', rating: 7.6, genre: '剧情/悬疑', duration: 131, director: '程耳', actors: '梁朝伟,王一博,周迅', description: '1938年至1945年间，数段隐秘历史故事在上海发生。一群无名英雄在黑暗中前行，用生命守护信仰。', releaseDate: '2023-01-22', price: 38, status: 'showing', hot: 900 },
-      '5': { _id: '5', title: '深海', poster: 'https://picsum.photos/300/420?random=45', rating: 7.3, genre: '动画/奇幻', duration: 112, director: '田晓鹏', actors: '苏鑫,王亭文,滕奎兴', description: '在大海的最深处，藏着一个神秘的世界。少女参宿误入深海，邂逅了一段独特的生命旅程。', releaseDate: '2023-01-22', price: 30, status: 'showing', hot: 750 }
-    };
+    this.setData({ loading: true });
+    backendApi
+      .getMovieById(this.movieId)
+      .then((res) => {
+        const m = normalizeMovie(res.data);
+        if (!m) {
+          util.showToast('电影不存在');
+          this.setData({ loading: false });
+          return;
+        }
+        const movieView = this.buildMovieView(m);
+        const gallery = this.buildGallery(m);
+        this.setData({ movie: m, movieView, gallery, loading: false });
+        wx.setNavigationBarTitle({ title: m.title });
+        this.tryAutoEnrichMovie(m);
+      })
+      .catch(() => {
+        util.showToast('加载失败');
+        this.setData({ loading: false });
+      });
+  },
 
-    const movie = movies[this.movieId] || movies['1'];
-    this.setData({ movie: movie, loading: false });
-    wx.setNavigationBarTitle({ title: movie.title });
+  needEnrichMovie: function (movie) {
+    if (!movie) return false;
+    const missingPoster = !String(movie.poster || '').trim();
+    const missingDesc = !String(movie.description || '').trim();
+    const missingDirector = !String(movie.director || '').trim();
+    const missingActors = !String(movie.actors || '').trim();
+    const missingGenre = !String(movie.genre || '').trim();
+    const missingReleaseDate = !String(movie.releaseDate || '').trim();
+    const duration = Number(movie.duration || 0);
+    const rating = Number(movie.rating || 0);
+    const missingDuration = !Number.isFinite(duration) || duration <= 0;
+    const missingRating = !Number.isFinite(rating) || rating <= 0;
+    return (
+      missingPoster ||
+      missingDesc ||
+      missingDirector ||
+      missingActors ||
+      missingGenre ||
+      missingReleaseDate ||
+      missingDuration ||
+      missingRating
+    );
+  },
+
+  tryAutoEnrichMovie: function (movie) {
+    if (!this.needEnrichMovie(movie) || this.data.enriching) return;
+    this.setData({ enriching: true });
+    backendApi
+      .enrichMovieFromTmdb(this.movieId)
+      .then((res) => {
+        const updatedMovie = res && res.data && res.data.movie ? normalizeMovie(res.data.movie) : null;
+        if (!updatedMovie) return;
+        const movieView = this.buildMovieView(updatedMovie);
+        const gallery = this.buildGallery(updatedMovie);
+        this.setData({ movie: updatedMovie, movieView, gallery });
+      })
+      .catch((err) => {
+        console.warn('自动补全电影资料失败:', err);
+      })
+      .finally(() => {
+        this.setData({ enriching: false });
+      });
+  },
+
+  buildMovieView: function (movie) {
+    const rating = Number(movie.rating);
+    const score = Number.isFinite(rating) ? (Math.round(rating * 10) / 10).toFixed(1) : '暂无';
+    const releaseDate = movie.releaseDate ? String(movie.releaseDate).slice(0, 10) : '暂无';
+    const duration = Number(movie.duration) > 0 ? `${Number(movie.duration)}分钟` : '时长待定';
+    const genreText = movie.genre || '类型待定';
+    const director = movie.director || '暂无';
+    const actors = movie.actors || '暂无';
+    const description = movie.description || '暂无剧情简介';
+    const poster = movie.poster || 'https://picsum.photos/600/900?random=801';
+    const price = Number(movie.price);
+    const priceText = Number.isFinite(price) ? price : '--';
+    const statusLabel = movie.status === 'coming' ? '即将上映' : movie.status === 'off' ? '已下架' : '正在热映';
+    const tags = this.buildTags(genreText, duration, statusLabel);
+    return {
+      score,
+      releaseDate,
+      duration,
+      genreText,
+      director,
+      actors,
+      description,
+      poster,
+      priceText,
+      statusLabel,
+      tags
+    };
+  },
+
+  buildTags: function (genreText, duration, statusLabel) {
+    const raw = []
+      .concat(String(genreText || '').split(/[\/,，\s]+/))
+      .concat([duration, statusLabel]);
+    return raw.filter(Boolean).slice(0, 6);
+  },
+
+  buildGallery: function (movie) {
+    const poster = movie.poster ? String(movie.poster) : '';
+    if (!poster) return [];
+    if (poster.indexOf('image.tmdb.org/t/p/') !== -1) {
+      const path = poster.split('/t/p/')[1]?.split('/').slice(1).join('/');
+      if (path) {
+        return [
+          `https://image.tmdb.org/t/p/w780/${path}`,
+          `https://image.tmdb.org/t/p/w1280/${path}`,
+          `https://image.tmdb.org/t/p/original/${path}`
+        ];
+      }
+    }
+    return [poster];
+  },
+
+  onPreviewImage: function (e) {
+    const current = e.currentTarget.dataset.url;
+    const urls = this.data.gallery || [];
+    if (!current || !urls.length) return;
+    wx.previewImage({ current, urls });
   },
 
   loadComments: function () {
-    const comments = [
-      { _id: '1', nickName: '电影迷', avatarUrl: '', rating: 5, content: '非常精彩的电影，特效震撼，剧情紧凑！', createTime: '2023-01-22', likes: 128 },
-      { _id: '2', nickName: '小明', avatarUrl: '', rating: 4, content: '整体不错，就是结尾有点仓促。', createTime: '2023-01-21', likes: 56 },
-      { _id: '3', nickName: '影迷小王', avatarUrl: '', rating: 5, content: '国产科幻的骄傲，强烈推荐！', createTime: '2023-01-20', likes: 89 }
-    ];
-    this.setData({ comments: comments });
+    backendApi
+      .getMovieComments(this.movieId)
+      .then((res) => {
+        const items = (res && res.data && res.data.items) || [];
+        const comments = items.map((c) => ({
+          ...c,
+          createTime: util.formatDate(c.createTime, 'YYYY-MM-DD HH:mm')
+        }));
+        this.setData({ comments });
+      })
+      .catch(() => {
+        this.setData({ comments: [] });
+      });
   },
 
   checkCollection: function () {
-    const collections = wx.getStorageSync('collections') || [];
-    const isCollected = collections.some(c => c.movieId === this.movieId);
-    this.setData({ isCollected: isCollected });
+    const isLogin = app.globalData.isLogin || wx.getStorageSync('isLogin');
+    if (!isLogin) {
+      this.setData({ isCollected: false });
+      return;
+    }
+    backendApi
+      .checkCollection(this.movieId)
+      .then((res) => {
+        const collected = res && res.data && res.data.collected;
+        this.setData({ isCollected: !!collected });
+      })
+      .catch(() => {
+        this.setData({ isCollected: false });
+      });
   },
 
   onBuyTicket: function () {
-    wx.navigateTo({
-      url: `/pages/cinema/cinema?movieId=${this.movieId}`
+    if (!this.movieId) {
+      util.showToast('电影信息加载失败，请重试');
+      return;
+    }
+    if (!util.requireLoginForPurchase()) {
+      app.globalData.selectedMovieId = this.movieId;
+      return;
+    }
+    app.globalData.selectedMovieId = this.movieId;
+    wx.switchTab({
+      url: '/pages/cinema/cinema',
+      fail: (err) => {
+        console.error('页面跳转失败:', err);
+        util.showToast('页面跳转失败，请重试');
+      }
     });
   },
 
   onCollect: function () {
-    const isLogin = app.globalData.isLogin;
+    const isLogin = app.globalData.isLogin || wx.getStorageSync('isLogin');
     if (!isLogin) {
       wx.showModal({
         title: '提示',
         content: '请先登录后再收藏',
-        confirmText: '去登录',
         success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({ url: '/pages/login/login' });
-          }
+          if (res.confirm) wx.navigateTo({ url: '/pages/login/login' });
         }
       });
       return;
     }
 
-    let collections = wx.getStorageSync('collections') || [];
-    
+    const movie = this.data.movie;
+    if (!movie) return;
+
     if (this.data.isCollected) {
-      collections = collections.filter(c => c.movieId !== this.movieId);
-      wx.setStorageSync('collections', collections);
-      this.setData({ isCollected: false });
-      wx.showToast({ title: '已取消收藏', icon: 'success' });
+      backendApi
+        .removeCollection(this.movieId)
+        .then(() => {
+          this.setData({ isCollected: false });
+          util.showToast('已取消收藏', 'success');
+        })
+        .catch(() => util.showToast('操作失败', 'none'));
     } else {
-      collections.push({
-        movieId: this.movieId,
-        movieTitle: this.data.movie.title,
-        moviePoster: this.data.movie.poster,
-        createTime: new Date().toISOString()
-      });
-      wx.setStorageSync('collections', collections);
-      this.setData({ isCollected: true });
-      wx.showToast({ title: '收藏成功', icon: 'success' });
+      backendApi
+        .addCollection({
+          movieId: this.movieId,
+          title: movie.title,
+          poster: movie.poster
+        })
+        .then(() => {
+          this.setData({ isCollected: true });
+          util.showToast('收藏成功', 'success');
+        })
+        .catch(() => util.showToast('收藏失败', 'none'));
     }
   },
 
   onShowCommentInput: function () {
-    const isLogin = app.globalData.isLogin;
+    const isLogin = app.globalData.isLogin || wx.getStorageSync('isLogin');
     if (!isLogin) {
       wx.showModal({
         title: '提示',
         content: '请先登录后再评论',
-        confirmText: '去登录',
         success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({ url: '/pages/login/login' });
-          }
+          if (res.confirm) wx.navigateTo({ url: '/pages/login/login' });
         }
       });
       return;
@@ -109,7 +259,7 @@ Page({
   },
 
   onHideCommentInput: function () {
-    this.setData({ showCommentInput: false, commentText: '' });
+    this.setData({ showCommentInput: false, commentText: '', commentRating: 5 });
   },
 
   onCommentInput: function (e) {
@@ -121,36 +271,39 @@ Page({
   },
 
   onSubmitComment: function () {
-    if (!this.data.commentText.trim()) {
-      wx.showToast({ title: '请输入评论内容', icon: 'none' });
+    const content = this.data.commentText.trim();
+    if (!content) {
+      util.showToast('请输入评论内容');
       return;
     }
 
-    const newComment = {
-      _id: Date.now().toString(),
-      nickName: app.globalData.userInfo?.nickName || '用户',
-      avatarUrl: app.globalData.userInfo?.avatarUrl || '',
-      rating: this.data.commentRating,
-      content: this.data.commentText,
-      createTime: new Date().toLocaleDateString(),
-      likes: 0
-    };
-
-    this.setData({
-      comments: [newComment, ...this.data.comments],
-      showCommentInput: false,
-      commentText: '',
-      commentRating: 5
-    });
-
-    wx.showToast({ title: '评论成功', icon: 'success' });
+    wx.showLoading({ title: '提交中...' });
+    backendApi
+      .postMovieComment(this.movieId, {
+        rating: this.data.commentRating,
+        content
+      })
+      .then(() => {
+        wx.hideLoading();
+        this.setData({
+          showCommentInput: false,
+          commentText: '',
+          commentRating: 5
+        });
+        util.showToast('评论成功', 'success');
+        this.loadComments();
+      })
+      .catch(() => {
+        wx.hideLoading();
+        util.showToast('评论失败', 'none');
+      });
   },
 
   onShareAppMessage: function () {
     return {
-      title: this.data.movie?.title || '电影详情',
+      title: this.data.movie ? this.data.movie.title : '电影详情',
       path: `/pages/movie-detail/movie-detail?id=${this.movieId}`,
-      imageUrl: this.data.movie?.poster
+      imageUrl: this.data.movie ? this.data.movie.poster : ''
     };
   }
 });

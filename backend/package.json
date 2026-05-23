@@ -1,0 +1,26 @@
+{
+  "name": "movie-ticket-backend",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "test": "node --test test/**/*.test.js",
+    "smoke": "node scripts/smokeApi.js",
+    "sync-tmdb": "node scripts/syncMoviesTmdb.js",
+    "import-all-tmdb": "node scripts/importAllMoviesTmdb.js",
+    "refresh-showing-upcoming": "node scripts/refreshShowingAndUpcoming.js",
+    "recompute-statuses": "node scripts/recomputeStatusesOnly.js",
+    "wipe-and-import-movies": "node scripts/wipeMoviesAndReimportTmdb.js",
+    "detect-tmdb-proxy": "node scripts/detectTmdbProxy.js"
+  },
+  "dependencies": {
+    "alipay-sdk": "^4.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "https-proxy-agent": "^7.0.6",
+    "mysql2": "^3.11.0",
+    "uuid": "^9.0.1"
+  }
+}

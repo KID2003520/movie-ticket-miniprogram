@@ -1,73 +1,95 @@
-<view class="container">
+<view class="container order-detail-page">
   <view wx:if="{{order}}" class="detail-wrapper">
-    <view class="status-bar {{order.status}}">
-      <view class="status-content">
-        <text class="status-icon">{{order.status === 'paid' ? '✅' : order.status === 'pending' ? '⏱' : '❌'}}</text>
-        <text class="status-text">{{order.status === 'pending' ? '待支付' : order.status === 'paid' ? '已支付' : '已取消'}}</text>
-      </view>
+    <view class="status-card {{order.status}}">
+      <text class="status-text">
+        {{order.status === 'pending' ? '待支付' : order.status === 'paid' ? '已支付' : order.status === 'refunding' ? '退款中' : order.status === 'refunded' ? '已退款' : '已取消'}}
+      </text>
+      <text wx:if="{{order.status === 'pending' && countdown > 0}}" class="countdown">剩余 {{Math.floor(countdown / 60)}}分{{countdown % 60}}秒</text>
     </view>
 
     <view class="movie-card">
       <image src="{{order.moviePoster}}" mode="aspectFill" class="movie-poster"></image>
-      <view class="movie-info">
+      <view class="movie-main">
         <text class="movie-title">{{order.movieTitle}}</text>
         <text class="movie-meta">{{order.date}} {{order.startTime}}</text>
-        <text class="movie-meta">{{order.cinemaName}}</text>
-        <text class="movie-meta">{{order.hallName}}</text>
+        <text class="movie-meta">{{order.cinemaName}} {{order.hallName}}</text>
       </view>
     </view>
 
-    <view class="seat-card">
-      <view class="card-title">座位信息</view>
+    <view class="block">
+      <text class="block-title">座位信息</text>
       <view class="seat-list">
         <text class="seat-item" wx:for="{{order.seats}}" wx:key="index">{{item.row}}排{{item.col}}座</text>
       </view>
     </view>
 
-    <view wx:if="{{order.status === 'paid'}}" class="qrcode-card">
-      <view class="card-title">取票码</view>
+    <view wx:if="{{order.status === 'paid'}}" class="block qr-block">
+      <text class="block-title">取票码</text>
       <image src="{{qrcodeUrl}}" mode="aspectFit" class="qrcode"></image>
-      <text class="qrcode-tip">请凭此二维码到影院取票</text>
     </view>
 
-    <view class="order-card">
-      <view class="card-title">订单信息</view>
-      <view class="info-item">
-        <text class="info-label">订单编号</text>
-        <view class="info-value" bindtap="onCopyOrderNo">
-          <text>{{order.orderNo}}</text>
-          <text class="copy-btn">复制</text>
+    <view class="block">
+      <text class="block-title">订单信息</text>
+      <view class="kv"><text>订单编号</text><view class="copy" bindtap="onCopyOrderNo"><text>{{order.orderNo}}</text><text class="copy-btn">复制</text></view></view>
+      <view class="kv"><text>下单时间</text><text>{{order.createTime}}</text></view>
+      <view wx:if="{{order.payTime}}" class="kv"><text>支付时间</text><text>{{order.payTime}}</text></view>
+      <view class="kv"><text>数量</text><text>{{order.seats.length}}张</text></view>
+      <view wx:if="{{order.status === 'pending'}}" class="kv coupon-row" bindtap="onCouponTap">
+        <text>优惠券</text>
+        <view class="coupon-cell">
+          <text wx:if="{{order.hasCoupon}}" class="coupon-applied">{{order.couponTitle}} -¥{{order.discountYuan}}</text>
+          <text wx:else class="coupon-placeholder">选择优惠券</text>
+          <text class="coupon-arrow">></text>
         </view>
       </view>
-      <view class="info-item">
-        <text class="info-label">下单时间</text>
-        <text class="info-value">{{order.createTime}}</text>
+      <view wx:if="{{order.hasCoupon}}" class="kv">
+        <text>原价</text>
+        <text class="origin-price">¥{{order.baseTotalPrice}}</text>
       </view>
-      <view wx:if="{{order.payTime}}" class="info-item">
-        <text class="info-label">支付时间</text>
-        <text class="info-value">{{order.payTime}}</text>
+      <view wx:if="{{order.hasCoupon}}" class="kv">
+        <text>优惠</text>
+        <text class="discount-price">-¥{{order.discountYuan}}</text>
       </view>
-      <view class="info-item">
-        <text class="info-label">票价</text>
-        <text class="info-value">{{order.totalPrice / order.seats.length}}元/张</text>
-      </view>
-      <view class="info-item">
-        <text class="info-label">数量</text>
-        <text class="info-value">{{order.seats.length}}张</text>
-      </view>
-      <view class="info-item total">
-        <text class="info-label">总价</text>
-        <text class="info-value price">{{order.totalPrice}}元</text>
-      </view>
+      <view class="kv total"><text>应付</text><text class="price">¥{{order.totalPrice}}</text></view>
     </view>
 
-    <view class="action-card">
-      <view wx:if="{{order.status === 'pending'}}" class="action-btn default" bindtap="onCancel">取消订单</view>
-      <view wx:if="{{order.status === 'pending'}}" class="action-btn primary" bindtap="onPay">立即支付</view>
+    <view class="action-bar">
+      <view wx:if="{{order.status === 'pending'}}" class="btn ghost" bindtap="onCancel">取消订单</view>
+      <view wx:if="{{order.status === 'pending' && alipayEnabled}}" class="btn alipay" bindtap="onAlipayPay">支付宝</view>
+      <view wx:if="{{order.status === 'pending'}}" class="btn primary" bindtap="onPay">支付</view>
+      <view wx:if="{{order.status === 'paid'}}" class="btn ghost" bindtap="onRefund">申请退款</view>
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">
-    <text>加载中...</text>
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view class="coupon-picker-mask" wx:if="{{showCouponPicker}}" bindtap="onCloseCouponPicker">
+    <view class="coupon-picker" catchtap="">
+      <view class="picker-header">
+        <text class="picker-title">选择优惠券</text>
+        <text class="picker-close" bindtap="onCloseCouponPicker">✕</text>
+      </view>
+      <scroll-view scroll-y class="picker-content">
+        <view
+          class="coupon-option"
+          wx:for="{{availableCoupons}}"
+          wx:key="_id"
+          bindtap="onSelectCoupon"
+          data-id="{{item._id}}"
+        >
+          <view class="option-left">
+            <text class="option-amount">¥{{item.amount}}</text>
+            <text class="option-condition">{{item.minAmount > 0 ? '满' + item.minAmount + '元可用' : '无门槛'}}</text>
+          </view>
+          <view class="option-right">
+            <text class="option-title">{{item.title}}</text>
+            <text class="option-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view wx:if="{{order.hasCoupon}}" class="picker-footer">
+        <view class="picker-remove" bindtap="onRemoveCoupon">不使用优惠券</view>
+      </view>
+    </view>
   </view>
 </view>

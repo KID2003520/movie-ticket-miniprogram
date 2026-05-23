@@ -1,0 +1,76 @@
+<view class="container">
+  <view class="toolbar card">
+    <view class="title-wrap">
+      <text class="title">数据报表</text>
+      <text class="sub">基于数据库实时聚合</text>
+    </view>
+    <picker mode="selector" range="{{dayOptions}}" bindchange="onRangeChange">
+      <view class="range-btn">最近{{days}}天</view>
+    </picker>
+  </view>
+
+  <view class="summary-grid">
+    <view class="summary-item card">
+      <text class="summary-value">{{summary.totalOrders}}</text>
+      <text class="summary-label">订单总数</text>
+    </view>
+    <view class="summary-item card">
+      <text class="summary-value">{{summary.totalRevenue}}</text>
+      <text class="summary-label">总收入(元)</text>
+    </view>
+    <view class="summary-item card">
+      <text class="summary-value">{{summary.totalUsers}}</text>
+      <text class="summary-label">活跃用户</text>
+    </view>
+  </view>
+
+  <view class="card section">
+    <view class="section-head">
+      <text class="section-title">近{{days}}天趋势</text>
+      <text class="loading" wx:if="{{loading}}">加载中...</text>
+    </view>
+    <view class="table-row table-head">
+      <text class="c-date">日期</text>
+      <text class="c-num">订单</text>
+      <text class="c-num">收入</text>
+      <text class="c-num">用户</text>
+    </view>
+    <view class="table-row" wx:for="{{trend}}" wx:key="date">
+      <text class="c-date">{{item.shortDate}}</text>
+      <text class="c-num">{{item.orderCount}}</text>
+      <text class="c-num">{{item.revenue}}</text>
+      <text class="c-num">{{item.activeUsers}}</text>
+    </view>
+    <view class="empty" wx:if="{{!loading && trend.length===0}}">暂无数据</view>
+  </view>
+
+  <view class="card section">
+    <text class="section-title">订单状态分布</text>
+    <view class="tag-list">
+      <view class="tag-item" wx:for="{{statusBreakdown}}" wx:key="status">
+        <text class="tag-label">{{item.label}}</text>
+        <text class="tag-value">{{item.count}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card section">
+    <text class="section-title">热门电影 Top 5</text>
+    <view class="rank-item" wx:for="{{topMovies}}" wx:key="movieId">
+      <text class="rank-name">{{index + 1}}. {{item.title}}</text>
+      <text class="rank-meta">订单 {{item.orderCount}} · 收入 {{item.revenue}} 元</text>
+    </view>
+    <view class="empty" wx:if="{{!loading && topMovies.length===0}}">暂无数据</view>
+  </view>
+
+  <view class="card section">
+    <text class="section-title">热门影院 Top 5</text>
+    <view class="rank-item" wx:for="{{topCinemas}}" wx:key="cinemaId">
+      <text class="rank-name">{{index + 1}}. {{item.name}}</text>
+      <text class="rank-meta">订单 {{item.orderCount}} · 收入 {{item.revenue}} 元</text>
+    </view>
+    <view class="empty" wx:if="{{!loading && topCinemas.length===0}}">暂无数据</view>
+  </view>
+
+  <view class="export-btn" bindtap="onExportCsv">复制CSV报表</view>
+</view>

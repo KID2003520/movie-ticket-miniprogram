@@ -1,14 +1,17 @@
 const app = getApp();
+const appConfig = require('../../utils/config.js');
+const backendApi = require('../../utils/backendApi.js');
 
 Page({
   data: {
     adminInfo: {},
     stats: {
-      todayOrders: 128,
-      todayRevenue: 4580,
-      newUsers: 23,
-      activeMovies: 15
-    }
+      todayOrders: 0,
+      todayRevenue: 0,
+      newUsers: 0,
+      activeMovies: 0
+    },
+    statsLoading: false
   },
 
   onLoad: function () {
@@ -35,7 +38,7 @@ Page({
       return;
     }
 
-    const isAdmin = userInfo.role === 'admin' || userInfo.openid;
+    const isAdmin = userInfo.role === 'admin' || userInfo.level === 'admin' || userInfo.isAdmin === true;
     if (!isAdmin) {
       wx.showModal({
         title: '权限不足',
@@ -59,17 +62,45 @@ Page({
   },
 
   loadStats: function () {
-    const movies = wx.getStorageSync('movies') || [];
-    const users = wx.getStorageSync('users') || [];
-    
-    this.setData({
-      stats: {
-        todayOrders: Math.floor(Math.random() * 200) + 50,
-        todayRevenue: Math.floor(Math.random() * 5000) + 1000,
-        newUsers: users.length || Math.floor(Math.random() * 30) + 10,
-        activeMovies: movies.length || 15
-      }
-    });
+    if (!appConfig.USE_BACKEND_ONLY) {
+      this.setData({
+        stats: {
+          todayOrders: 0,
+          todayRevenue: 0,
+          newUsers: 0,
+          activeMovies: 0
+        }
+      });
+      return;
+    }
+
+    this.setData({ statsLoading: true });
+    const that = this;
+    backendApi
+      .getAdminDashboardStats()
+      .then((body) => {
+        const d = (body && body.data) || {};
+        that.setData({
+          stats: {
+            todayOrders: Number(d.todayOrders) || 0,
+            todayRevenue: Number(d.todayRevenue) || 0,
+            newUsers: Number(d.newUsers) || 0,
+            activeMovies: Number(d.activeMovies) || 0
+          },
+          statsLoading: false
+        });
+      })
+      .catch(() => {
+        that.setData({
+          stats: {
+            todayOrders: 0,
+            todayRevenue: 0,
+            newUsers: 0,
+            activeMovies: 0
+          },
+          statsLoading: false
+        });
+      });
   },
 
   onMovieManage: function () {
@@ -81,11 +112,15 @@ Page({
   },
 
   onOrderManage: function () {
-    wx.navigateTo({ url: '/pages/order/order' });
+    wx.navigateTo({ url: '/pages/admin-order/admin-order' });
+  },
+
+  onPointsManage: function () {
+    wx.navigateTo({ url: '/pages/admin-points/admin-points' });
   },
 
   onCinemaManage: function () {
-    wx.navigateTo({ url: '/pages/cinema/cinema' });
+    wx.navigateTo({ url: '/pages/admin-cinema/admin-cinema' });
   },
 
   onAddMovie: function () {
@@ -97,7 +132,7 @@ Page({
   },
 
   onViewReport: function () {
-    wx.showToast({ title: '数据报表开发中', icon: 'none' });
+    wx.navigateTo({ url: '/pages/admin-report/admin-report' });
   },
 
   onSettings: function () {

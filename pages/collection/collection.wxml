@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="collection-list">
+    <view class="collection-item" wx:for="{{collections}}" wx:key="_id">
+      <image src="{{item.moviePoster}}" mode="aspectFill" class="movie-poster" bindtap="onMovieTap" data-id="{{item.movieId}}"></image>
+      <view class="movie-info" bindtap="onMovieTap" data-id="{{item.movieId}}">
+        <text class="movie-title">{{item.movieTitle}}</text>
+        <text class="collection-time">收藏于 {{item.createTime}}</text>
+      </view>
+      <view class="delete-btn" catchtap="onDelete" data-id="{{item._id}}" data-movieid="{{item.movieId}}">删除</view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && collections.length === 0}}" class="empty-state">
+    <text class="empty-icon">⭐</text>
+    <text class="empty-text">暂无收藏</text>
+    <navigator url="/pages/movie/movie" class="go-btn">去看看</navigator>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view>

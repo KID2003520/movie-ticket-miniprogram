@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="head">{{cinemaName || '影院'}} · 影厅</view>
+  <view class="hint">修改座位行列后，请在管理端执行「重建排片」使新座位生效。</view>
+
+  <view class="add-btn" bindtap="onAddHall">+ 新增影厅</view>
+
+  <view class="list">
+    <view class="item" wx:for="{{halls}}" wx:key="_id">
+      <view class="item-main">
+        <text class="name">{{item.name}}</text>
+        <text class="meta">类型：{{item.hallType || '--'}}</text>
+        <text class="meta">座位：{{item.seatRows}} 行 × {{item.seatCols}} 列 · 排序 {{item.sortOrder}}</text>
+      </view>
+      <view class="item-actions">
+        <view class="action edit" bindtap="onEditHall" data-id="{{item._id}}">编辑</view>
+        <view class="action del" bindtap="onDeleteHall" data-id="{{item._id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && halls.length===0}}" class="empty">暂无影厅，可新增或等待系统自动初始化</view>
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view class="modal-mask" wx:if="{{showFormModal}}" bindtap="onCloseForm"></view>
+  <view class="modal" wx:if="{{showFormModal}}">
+    <view class="modal-title">{{isEdit ? '编辑影厅' : '新增影厅'}}</view>
+
+    <input class="field" placeholder="影厅名称*" value="{{form.name}}" data-key="name" bindinput="onFormInput" />
+    <input class="field" placeholder="厅类型（如 IMAX、3D）" value="{{form.hallType}}" data-key="hallType" bindinput="onFormInput" />
+    <input class="field" placeholder="座位行数(4-30)" value="{{form.seatRows}}" data-key="seatRows" type="number" bindinput="onFormInput" />
+    <input class="field" placeholder="座位列数(6-30)" value="{{form.seatCols}}" data-key="seatCols" type="number" bindinput="onFormInput" />
+    <input class="field" placeholder="排序(数字越小越靠前)" value="{{form.sortOrder}}" data-key="sortOrder" type="number" bindinput="onFormInput" />
+
+    <view class="modal-actions">
+      <view class="btn cancel" bindtap="onCloseForm">取消</view>
+      <view class="btn ok" bindtap="onSubmitForm">保存</view>
+    </view>
+  </view>
+</view>

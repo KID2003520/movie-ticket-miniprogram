@@ -1,0 +1,55 @@
+<view class="container">
+  <view class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="搜索影院名称/地址/城市"
+      value="{{keyword}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+      bindconfirm="onSearch"
+    />
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <view class="add-btn" bindtap="onAddCinema">+ 新增影院</view>
+
+  <view class="list">
+    <view class="item" wx:for="{{cinemas}}" wx:key="_id">
+      <view class="item-main">
+        <text class="name">{{item.name}}</text>
+        <text class="meta">{{item.city}} · {{item.address}}</text>
+        <text class="meta">电话：{{item.phone || '--'}} · 起步价：¥{{item.minPrice || 0}}</text>
+        <text class="meta">经纬度：{{item.latitude || 0}}, {{item.longitude || 0}}</text>
+        <text class="meta">标签：{{item.tags && item.tags.length ? item.tags.join(' / ') : '--'}}</text>
+      </view>
+      <view class="item-actions">
+        <view class="action halls" bindtap="onManageHalls" data-id="{{item._id}}" data-name="{{item.name}}">影厅</view>
+        <view class="action edit" bindtap="onEditCinema" data-id="{{item._id}}">编辑</view>
+        <view class="action del" bindtap="onDeleteCinema" data-id="{{item._id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && cinemas.length===0}}" class="empty">暂无影院数据</view>
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view class="modal-mask" wx:if="{{showFormModal}}" bindtap="onCloseForm"></view>
+  <view class="modal" wx:if="{{showFormModal}}">
+    <view class="modal-title">{{isEdit ? '编辑影院' : '新增影院'}}</view>
+
+    <input class="field" placeholder="影院名称*" value="{{form.name}}" data-key="name" bindinput="onFormInput" />
+    <input class="field" placeholder="所在城市" value="{{form.city}}" data-key="city" bindinput="onFormInput" />
+    <input class="field" placeholder="详细地址*" value="{{form.address}}" data-key="address" bindinput="onFormInput" />
+    <input class="field" placeholder="联系电话" value="{{form.phone}}" data-key="phone" bindinput="onFormInput" />
+    <input class="field" placeholder="纬度" value="{{form.latitude}}" data-key="latitude" bindinput="onFormInput" />
+    <input class="field" placeholder="经度" value="{{form.longitude}}" data-key="longitude" bindinput="onFormInput" />
+    <input class="field" placeholder="最低票价(元)" value="{{form.minPrice}}" data-key="minPrice" bindinput="onFormInput" />
+    <input class="field" placeholder="标签(逗号分隔，如IMAX,停车场)" value="{{form.tagsText}}" data-key="tagsText" bindinput="onFormInput" />
+
+    <view class="modal-actions">
+      <view class="btn cancel" bindtap="onCloseForm">取消</view>
+      <view class="btn ok" bindtap="onSubmitForm">保存</view>
+    </view>
+  </view>
+</view>
